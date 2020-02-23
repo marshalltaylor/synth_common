@@ -1,5 +1,6 @@
 # STM32F4xx bsp
-REPO_ROOT = ..
+SYNTH_COMMON_ROOT := ..
+REPO_ROOT = ../$(SYNTH_COMMON_ROOT)
 
 C_SOURCES =  \
 Source/portable/MemMang/heap_4.c \
@@ -35,7 +36,7 @@ OUTPUT_LIB_NAME = FreeRTOS.a
 
 default: all
 
-include $(REPO_ROOT)/tools/build/common.mk
+include $(SYNTH_COMMON_ROOT)/tools/build/common.mk
 
 all: $(BUILD_DIR)/$(OUTPUT_LIB_NAME)
 

@@ -1,5 +1,6 @@
-# STM32F4xx bsp uart test
-REPO_ROOT = ../../..
+# Module test
+SYNTH_COMMON_ROOT := ../../..
+REPO_ROOT = ../$(SYNTH_COMMON_ROOT)
 
 ifeq ($(strip $(board)),)
 ifneq ('$(MAKECMDGOALS)','clean')
@@ -8,9 +9,6 @@ board = clock
 endif
 endif
 
-#Unused:
-#BlinkerPanel.cpp
-#MidiClockDisplay.cpp
 C_SOURCES =  \
 main.cpp \
 taskTest.cpp \
@@ -20,21 +18,19 @@ os.c
 
 SOURCE_DIRS = . \
 
-# TODO: Not all these should be included maybe
-# TODO: FreeRTOSConfig.h location?
 C_INCLUDES = \
 $(REPO_ROOT)/bsp \
-$(REPO_ROOT)/modules/SegmentVideo \
-$(REPO_ROOT)/modules/logging \
-$(REPO_ROOT)/FreeRTOS \
-$(REPO_ROOT)/FreeRTOS/Source/include \
-$(REPO_ROOT)/FreeRTOS/Source/CMSIS_RTOS \
-$(REPO_ROOT)/FreeRTOS/Source/portable/GCC/ARM_CM4F
+$(SYNTH_COMMON_ROOT)/modules/SegmentVideo \
+$(SYNTH_COMMON_ROOT)/modules/logging \
+$(SYNTH_COMMON_ROOT)/FreeRTOS \
+$(SYNTH_COMMON_ROOT)/FreeRTOS/Source/include \
+$(SYNTH_COMMON_ROOT)/FreeRTOS/Source/CMSIS_RTOS \
+$(SYNTH_COMMON_ROOT)/FreeRTOS/Source/portable/GCC/ARM_CM4F
 
 STATIC_LIBS = \
-$(REPO_ROOT)/FreeRTOS/build/FreeRTOS.a \
-$(REPO_ROOT)/modules/SegmentVideo/build/SegmentVideo.a \
-$(REPO_ROOT)/modules/logging/build/logging.a \
+$(SYNTH_COMMON_ROOT)/FreeRTOS/build/FreeRTOS.a \
+$(SYNTH_COMMON_ROOT)/modules/SegmentVideo/build/SegmentVideo.a \
+$(SYNTH_COMMON_ROOT)/modules/logging/build/logging.a \
 $(REPO_ROOT)/bsp/build/bsp_$(board).a
 
 # objects
@@ -43,9 +39,9 @@ OBJECTS = $(patsubst %c,%o,$(patsubst %cpp,%o,$(C_SOURCES)))
 # rules
 default: all
 
-include $(REPO_ROOT)/tools/build/catalog.mk
+include $(SYNTH_COMMON_ROOT)/tools/build/catalog.mk
 
-include $(REPO_ROOT)/tools/build/common.mk
+include $(SYNTH_COMMON_ROOT)/tools/build/common.mk
 
 # linker
 $(BUILD_DIR)/output.elf: build_dirs $(addprefix $(BUILD_DIR)/obj/, $(OBJECTS))
