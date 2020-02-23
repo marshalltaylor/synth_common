@@ -46,6 +46,19 @@ clean_all:
 	$(MAKE) -C $(REPO_ROOT)/bsp clean
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/FreeRTOS clean
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/logging clean
-	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/uCModules clean
-	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/SegmentVideo clean
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/midi47fx clean
+	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/midiUtils clean
+	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/SegmentVideo clean
+	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/TeensyView clean
+	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/uCModules clean
+
+clean_apps:
+	rm -rf $(REPO_ROOT)/apps/sliders_001/build
+	rm -rf $(REPO_ROOT)/bsp/test/build
+	rm -rf $(SYNTH_COMMON_ROOT)/modules/_template/test/build
+	rm -rf $(SYNTH_COMMON_ROOT)/modules/logging/test/build
+	rm -rf $(SYNTH_COMMON_ROOT)/modules/midi47fx/test/build
+	rm -rf $(SYNTH_COMMON_ROOT)/modules/midiUtils/test/build
+	rm -rf $(SYNTH_COMMON_ROOT)/modules/SegmentVideo/test/build
+	rm -rf $(SYNTH_COMMON_ROOT)/modules/TeensyView/test/build
+	rm -rf $(SYNTH_COMMON_ROOT)/modules/uCModules/test/build

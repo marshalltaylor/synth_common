@@ -15,9 +15,18 @@ void HardwareSerial::initPort(comPort_t port)
 {
 	if(port >= NUM_COM_PORTS)
 	{
-		return;
+		while(1);
 	}
+
 	bspGetSerialFunctions(port, &bspSerialMidiObj);
+
+	if(( bspSerialMidiObj.bytesAvailable == NULL )
+				|| ( bspSerialMidiObj.peek == NULL )
+				|| ( bspSerialMidiObj.read == NULL )
+				|| ( bspSerialMidiObj.write == NULL ))
+	{
+		while(1);
+	}
 }
 
 void HardwareSerial::begin(unsigned long baud)
@@ -26,36 +35,21 @@ void HardwareSerial::begin(unsigned long baud)
 
 int HardwareSerial::available(void)
 {
-	if( bspSerialMidiObj.bytesAvailable != NULL )
-	{
-		return bspSerialMidiObj.bytesAvailable();
-	}
-	return 0;
+	return bspSerialMidiObj.bytesAvailable();
 }
 
 int HardwareSerial::peek(void)
 {
-	if( bspSerialMidiObj.peek != NULL )
-	{
-		return bspSerialMidiObj.peek();
-	}
-	return 0;
+	return bspSerialMidiObj.peek();
 }
 
 int HardwareSerial::read(void)
 {
-	if( bspSerialMidiObj.read != NULL )
-	{
-		return bspSerialMidiObj.read();
-	}
-	return 0;
+	return bspSerialMidiObj.read();
 }
 
 size_t HardwareSerial::write(uint8_t c)
 {
-	if( bspSerialMidiObj.write != NULL )
-	{
-		bspSerialMidiObj.write(c);
-	}
+	bspSerialMidiObj.write(c);
 	return 1;
 }
