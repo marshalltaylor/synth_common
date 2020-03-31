@@ -20,7 +20,7 @@ SOURCE_DIRS = . \
 
 C_INCLUDES = \
 $(REPO_ROOT)/bsp \
-$(SYNTH_COMMON_ROOT)/modules/SegmentVideo \
+$(SYNTH_COMMON_ROOT)/modules/CRTVideo \
 $(SYNTH_COMMON_ROOT)/modules/logging \
 $(SYNTH_COMMON_ROOT)/FreeRTOS \
 $(SYNTH_COMMON_ROOT)/FreeRTOS/Source/include \
@@ -29,7 +29,7 @@ $(SYNTH_COMMON_ROOT)/FreeRTOS/Source/portable/GCC/ARM_CM4F
 
 STATIC_LIBS = \
 $(SYNTH_COMMON_ROOT)/FreeRTOS/build/FreeRTOS.a \
-$(SYNTH_COMMON_ROOT)/modules/SegmentVideo/build/SegmentVideo.a \
+$(SYNTH_COMMON_ROOT)/modules/CRTVideo/build/CRTVideo.a \
 $(SYNTH_COMMON_ROOT)/modules/logging/build/logging.a \
 $(REPO_ROOT)/bsp/build/bsp_$(board).a
 

@@ -30,6 +30,10 @@ $(SYNTH_COMMON_ROOT)/modules/SegmentVideo/build/SegmentVideo.a:
 	@echo "######## Building $(SYNTH_COMMON_ROOT)/modules/SegmentVideo"
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/SegmentVideo
 
+$(SYNTH_COMMON_ROOT)/modules/CRTVideo/build/CRTVideo.a:
+	@echo "######## Building $(SYNTH_COMMON_ROOT)/modules/CRTVideo"
+	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/CRTVideo
+
 $(SYNTH_COMMON_ROOT)/modules/uCModules/build/uCModules.a:
 	@echo "######## Building $(SYNTH_COMMON_ROOT)/modules/uCModules"
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/uCModules
@@ -49,6 +53,7 @@ clean_all:
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/midi47fx clean
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/midiUtils clean
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/SegmentVideo clean
+	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/CRTVideo clean
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/TeensyView clean
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/uCModules clean
 
@@ -60,5 +65,6 @@ clean_apps:
 	rm -rf $(SYNTH_COMMON_ROOT)/modules/midi47fx/test/build
 	rm -rf $(SYNTH_COMMON_ROOT)/modules/midiUtils/test/build
 	rm -rf $(SYNTH_COMMON_ROOT)/modules/SegmentVideo/test/build
+	rm -rf $(SYNTH_COMMON_ROOT)/modules/CRTVideo/test/build
 	rm -rf $(SYNTH_COMMON_ROOT)/modules/TeensyView/test/build
 	rm -rf $(SYNTH_COMMON_ROOT)/modules/uCModules/test/build

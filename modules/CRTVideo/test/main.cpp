@@ -5,9 +5,9 @@
 #include "main.h"
 #include "os.h"
 
-#include "MidiClockDisplay.h"
+#include "CRTVideo.h"
 
-MidiClockDisplay Segments;
+CRTVideo crt;
 
 
 /* Private variables ---------------------------------------------------------*/

@@ -34,10 +34,10 @@ Logging consoleDebug;
 
 #endif
 
-//extern MidiClockDisplay Segments;
-//extern char value1Str[8];
+#include "CRTVideo.h"
 
-//uint8_t peekValue = 128;
+extern CRTVideo crt;
+
 static comPortInterface_t console;
 TaskStatus_t pxTaskStatusArray[5];
 
@@ -132,11 +132,20 @@ extern "C" void taskConsoleStart(void * argument)
 	bspGetSerialFunctions(COM0, &console);
 
 	taskConsolePrintHelp();
+	
+	crt.init();
+	char str[] = "\n\r\n\r  Hello World!\n\r\n\r          ";
+	for(int i = 0; i < 24; i++)
+	{
+		crt.writeChar(str[i]);
+	}
+	
 	while(1)
 	{
 		if(console.bytesAvailable())
 		{
 			char c = (char)console.read();
+			crt.writeChar(c);
 			switch(c)
 			{
 				case '\r':
@@ -278,7 +287,8 @@ extern "C" void taskConsoleStart(void * argument)
 		uint32_t now = xTaskGetTickCount();
 		if(now > nextUpdate)
 		{
-			nextUpdate = nextUpdate + 5000;
+			nextUpdate = nextUpdate + 100;
+			crt.drawFrame();
 			//Thing that happens only so often -- don't block here
 		}
 		// Clock segment driver

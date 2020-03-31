@@ -4,7 +4,9 @@
 extern "C" {
 #endif
 
-extern uint8_t * asciiLUT;
+#define ASCII_BLACK_LEVEL 0x7F
+
+extern uint8_t asciiLUT[];
 
 void calculateAsciiLUT(void);
 

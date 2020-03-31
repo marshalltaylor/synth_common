@@ -19,7 +19,6 @@
 
 /* Includes -- modules -------------------------------------------------------*/
 #include "logging.h"
-#include "MidiClockDisplay.h"
 
 /* References ----------------------------------------------------------------*/
 #define USE_LOGGING
