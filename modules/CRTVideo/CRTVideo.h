@@ -16,8 +16,8 @@ private:
 	void shiftTextUp(void);
 	void writeAscii5x7(uint8_t * dst, uint8_t dstX, uint8_t dstY, char c);
 
-	uint8_t cursorX = 0;
-	uint8_t cursorY = 0;
+	uint8_t cursorX = 1;
+	uint8_t cursorY = 1;
 	char textMap[TEXT_MAP_HEIGHT*TEXT_MAP_WIDTH];
 };
 

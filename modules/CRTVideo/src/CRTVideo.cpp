@@ -45,33 +45,49 @@ void CRTVideo::writeChar(char c)
 {
 	if(c == '\n')
 	{
+		cursorY++;
 		if(cursorY >= TEXT_MAP_HEIGHT - 1)
 		{
 			shiftTextUp();
-			cursorY = TEXT_MAP_HEIGHT - 1;
-		}
-		else
-		{
-			cursorY++;
+			cursorY = TEXT_MAP_HEIGHT - 2;
 		}
 		return;
 	}
 	else if(c == '\r')
 	{
-		cursorX = 0;
+		cursorX = 1;
 		return;
 	}
-	
+	else if(c == 0x08)//backspace
+	{
+		cursorX--;
+		if(cursorX <= 0)
+		{
+			//Special case, no up sroll
+			if(cursorY <= 1)
+			{
+				cursorX = 1;
+				return;
+			}
+			else if(cursorY > 1)
+			{
+				cursorY--;
+				cursorX = TEXT_MAP_WIDTH - 2;
+			}
+		}
+		textMap[(TEXT_MAP_WIDTH * cursorY) + cursorX] = ' ';
+		return;
+	}
 	textMap[(TEXT_MAP_WIDTH * cursorY) + cursorX] = c;
 	cursorX++;
-	if(cursorX >= TEXT_MAP_WIDTH)
+	if(cursorX >= TEXT_MAP_WIDTH - 1)
 	{
-		cursorX = 0;
+		cursorX = 1;
 		cursorY++;
-		if(cursorY >= TEXT_MAP_HEIGHT)
+		if(cursorY >= TEXT_MAP_HEIGHT - 1)
 		{
 			shiftTextUp();
-			cursorY = TEXT_MAP_HEIGHT - 1;
+			cursorY = TEXT_MAP_HEIGHT - 2;
 		}
 	}
 }
@@ -80,8 +96,8 @@ void CRTVideo::drawFrame(void)
 {
 	bspIOPinWrite(D31, 0);
 	
-	uint8_t textX = 0;
-	uint8_t textY = 0;
+	uint8_t textX = 1;
+	uint8_t textY = 1;
 
 	uint8_t * nextFrame = 0;
 	if(bspDACGetBufferBlank(&nextFrame)) //address of pointer
@@ -101,11 +117,11 @@ void CRTVideo::drawFrame(void)
 void CRTVideo::shiftTextUp(void)
 {
 	int i;
-	for(i = 0; i < TEXT_MAP_HEIGHT - 1; i++)
+	for(i = 1; i < TEXT_MAP_HEIGHT - 1; i++)
 	{
 		memcpy(&textMap[(i*TEXT_MAP_WIDTH)], &textMap[((i+1)*TEXT_MAP_WIDTH)], TEXT_MAP_WIDTH);
 	}
-	memset(&textMap[((i+1)*TEXT_MAP_WIDTH)], ' ', TEXT_MAP_WIDTH);
+	memset(&textMap[((i-1)*TEXT_MAP_WIDTH)], ' ', TEXT_MAP_WIDTH);
 }
 
 void CRTVideo::writeAscii5x7(uint8_t * dst, uint8_t dstX, uint8_t dstY, char c)

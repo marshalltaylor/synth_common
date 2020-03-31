@@ -123,7 +123,7 @@ void taskConsolePrintHelp(void)
 //strMsg_t globoMsg = {0};
 extern "C" void taskConsoleStart(void * argument)
 {
-	uint32_t nextUpdate = 0;
+	uint16_t nextUpdate = 0;
 #ifdef USE_LOGGING
 	consoleDebug.setStamp("Console", 7);
 	consoleDebug.setMode(LOG_MODE_DEFAULT);
@@ -134,8 +134,8 @@ extern "C" void taskConsoleStart(void * argument)
 	taskConsolePrintHelp();
 	
 	crt.init();
-	char str[] = "\n\r\n\r  Hello World!\n\r\n\r          ";
-	for(int i = 0; i < 24; i++)
+	char str[] = "Program.\n\r          ";
+	for(int i = 0; i < 10; i++)
 	{
 		crt.writeChar(str[i]);
 	}
@@ -146,148 +146,149 @@ extern "C" void taskConsoleStart(void * argument)
 		{
 			char c = (char)console.read();
 			crt.writeChar(c);
-			switch(c)
-			{
-				case '\r':
-				{
-					localPrintf("\n");
-					break;
-				}
-				case 'r':
-				{
-					localPrintf("\n");
-					taskConsolePrintStats();
-					break;
-				}
-				case 'h':
-				{
-					taskConsolePrintHelp();
-					break;
-				}
-				case 'i':
-				{
-					localPrintf("Increment 'peek' value\n");
-//					peekValue++;
-//					char buffer[5];
-//					sprintf(buffer, "%03d", peekValue);
-//					Segments.displayDrawValue(buffer);
-					break;
-				}
-				case 'p':
-				{
-					localPrintf("Start peeking\n");
-//					char buffer[5];
-//					sprintf(buffer, "%03d", peekValue);
-//					Segments.showNewValue(buffer);
-					break;
-				}
-				case '!':
-				{
-					localPrintf("3");
-					delay(300);
-					localPrintf("2");
-					delay(300);
-					localPrintf("1");
-					delay(300);
-
-					strMsg_t * msg = new strMsg_t();
-
-					msg->id = -1;
-					msg->data[0] = '\0';
-					if(pdPASS != xQueueSend( logQueue, &msg, 0 ))
-					{
-						localPrintf(".dud");
-						delete msg;
-					}
-					break;
-				}
-				case 'H':
-				{
-					strMsg_t * msg = new strMsg_t();
-
-					msg->id = 0;
-					sprintf( msg->data, "Hello world!\n");
-					if(pdPASS != xQueueSend( logQueue, &msg, 0 ))
-					{
-						//TODO: error on send
-						delete msg;
-					}
-					break;
-				}
-				case 't':
-				{
-					//Test delay times
-					localPrintf("\n");
-					localPrintf("Start time  %dms\n", millis());
-					vTaskDelay( 1000 );
-					localPrintf("Stop time   %dms\n", millis());
-					//localPrintf("tick count     %dms\n", xTaskGetTickCount());
-					break;
-				}
-				case 'l':
-				{
-					//Test delay times
-					localPrintf("L");
-					delay( 333 );
-					localPrintf("O");
-					delay( 333 );
-					localPrintf("A");
-					delay( 333 );
-					localPrintf("D");
-					break;
-				}
-				default:
-				{
-					if(((c >= '0')&&(c <= '9'))||(c == '`'))
-					{
-						EventBits_t uxBits = xEventGroupGetBits(xTestEventGroup);
-						uint8_t testKeyMask = 0;
-						if((c != '`')&&(c != '8')&&(c != '9'))
-						{
-							testKeyMask = 0x0001 << (c - '0');
-							uxBits ^= testKeyMask;
-							if( (uxBits >> (c - '0')) & 0x0001 )
-							{
-								xEventGroupSetBits(xTestEventGroup, testKeyMask );
-							}
-							else
-							{
-								xEventGroupClearBits(xTestEventGroup, testKeyMask );
-							}
-
-						}
-						for(int i = 1; i <= 9; i++)
-						{
-							localPrintf("%d", (uxBits >> i)&0x0001);
-						}
-						localPrintf("%d\n", uxBits&0x0001);
-						
-						//Optionally do something with key like regular state
-						if(c == '2')
-						{
-							if(uxBits & testKeyMask)
-							{
-								consoleDebug.setMode(LOG_MODE_AUTO);
-							}
-							else
-							{
-								consoleDebug.setMode(LOG_MODE_DEFAULT);
-							}
-						}
-					}
-					else
-					{
-						localPrintf(".");
-					}
-				}
-
-			}
+			//
+			//switch(c)
+			//{
+			//	case '\r':
+			//	{
+			//		localPrintf("\n");
+			//		break;
+			//	}
+			//	case 'r':
+			//	{
+			//		localPrintf("\n");
+			//		taskConsolePrintStats();
+			//		break;
+			//	}
+			//	case 'h':
+			//	{
+			//		taskConsolePrintHelp();
+			//		break;
+			//	}
+			//	case 'i':
+			//	{
+			//		localPrintf("Increment 'peek' value\n");
+//			//		peekValue++;
+//			//		char buffer[5];
+//			//		sprintf(buffer, "%03d", peekValue);
+//			//		Segments.displayDrawValue(buffer);
+			//		break;
+			//	}
+			//	case 'p':
+			//	{
+			//		localPrintf("Start peeking\n");
+//			//		char buffer[5];
+//			//		sprintf(buffer, "%03d", peekValue);
+//			//		Segments.showNewValue(buffer);
+			//		break;
+			//	}
+			//	case '!':
+			//	{
+			//		localPrintf("3");
+			//		delay(300);
+			//		localPrintf("2");
+			//		delay(300);
+			//		localPrintf("1");
+			//		delay(300);
+            //
+			//		strMsg_t * msg = new strMsg_t();
+            //
+			//		msg->id = -1;
+			//		msg->data[0] = '\0';
+			//		if(pdPASS != xQueueSend( logQueue, &msg, 0 ))
+			//		{
+			//			localPrintf(".dud");
+			//			delete msg;
+			//		}
+			//		break;
+			//	}
+			//	case 'H':
+			//	{
+			//		strMsg_t * msg = new strMsg_t();
+            //
+			//		msg->id = 0;
+			//		sprintf( msg->data, "Hello world!\n");
+			//		if(pdPASS != xQueueSend( logQueue, &msg, 0 ))
+			//		{
+			//			//TODO: error on send
+			//			delete msg;
+			//		}
+			//		break;
+			//	}
+			//	case 't':
+			//	{
+			//		//Test delay times
+			//		localPrintf("\n");
+			//		localPrintf("Start time  %dms\n", millis());
+			//		vTaskDelay( 1000 );
+			//		localPrintf("Stop time   %dms\n", millis());
+			//		//localPrintf("tick count     %dms\n", xTaskGetTickCount());
+			//		break;
+			//	}
+			//	case 'l':
+			//	{
+			//		//Test delay times
+			//		localPrintf("L");
+			//		delay( 333 );
+			//		localPrintf("O");
+			//		delay( 333 );
+			//		localPrintf("A");
+			//		delay( 333 );
+			//		localPrintf("D");
+			//		break;
+			//	}
+			//	default:
+			//	{
+			//		if(((c >= '0')&&(c <= '9'))||(c == '`'))
+			//		{
+			//			EventBits_t uxBits = xEventGroupGetBits(xTestEventGroup);
+			//			uint8_t testKeyMask = 0;
+			//			if((c != '`')&&(c != '8')&&(c != '9'))
+			//			{
+			//				testKeyMask = 0x0001 << (c - '0');
+			//				uxBits ^= testKeyMask;
+			//				if( (uxBits >> (c - '0')) & 0x0001 )
+			//				{
+			//					xEventGroupSetBits(xTestEventGroup, testKeyMask );
+			//				}
+			//				else
+			//				{
+			//					xEventGroupClearBits(xTestEventGroup, testKeyMask );
+			//				}
+            //
+			//			}
+			//			for(int i = 1; i <= 9; i++)
+			//			{
+			//				localPrintf("%d", (uxBits >> i)&0x0001);
+			//			}
+			//			localPrintf("%d\n", uxBits&0x0001);
+			//			
+			//			//Optionally do something with key like regular state
+			//			if(c == '2')
+			//			{
+			//				if(uxBits & testKeyMask)
+			//				{
+			//					consoleDebug.setMode(LOG_MODE_AUTO);
+			//				}
+			//				else
+			//				{
+			//					consoleDebug.setMode(LOG_MODE_DEFAULT);
+			//				}
+			//			}
+			//		}
+			//		else
+			//		{
+			//			localPrintf(".");
+			//		}
+			//	}
+            //
+			//}
 		}
 
-		uint32_t now = xTaskGetTickCount();
+		uint16_t now = xTaskGetTickCount();
 		if(now > nextUpdate)
 		{
-			nextUpdate = nextUpdate + 100;
+			nextUpdate = nextUpdate + 33;
 			crt.drawFrame();
 			//Thing that happens only so often -- don't block here
 		}
