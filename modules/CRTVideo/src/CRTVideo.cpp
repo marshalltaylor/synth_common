@@ -38,7 +38,7 @@ void CRTVideo::init(void)
 		if(((i+1) % 6) == 0) localPrintf("\n");
 	}
 	bspDACInit();
-	bspDACInterlace(false);
+	//bspDACInterlace(false);
 }
 
 void CRTVideo::writeChar(char c)
@@ -92,6 +92,8 @@ void CRTVideo::writeChar(char c)
 	}
 }
 
+//Optional/example call to write text to screen.
+//Alternatly, take your own frame and use console()
 void CRTVideo::drawFrame(void)
 {
 	bspIOPinWrite(D31, 0);
@@ -112,6 +114,141 @@ void CRTVideo::drawFrame(void)
 		bspDACSwapBuffers();
 	}
 	bspIOPinWrite(D31, 1);
+}
+
+bool CRTVideo::getBlank(uint8_t ** output)
+{
+	if(bspDACGetBufferBlank(output)) //address of pointer
+	{
+		return true;
+	}
+	return false;
+}
+
+void CRTVideo::swap(void)
+{
+	bspDACSwapBuffers();
+}
+
+void CRTVideo::console(uint8_t * dst)
+{
+	uint8_t textX = 1;
+	uint8_t textY = 1;
+
+	for(textY = 0; textY < TEXT_MAP_HEIGHT; textY++)
+	{
+		for(textX = 0; textX < TEXT_MAP_WIDTH; textX++)
+		{
+			writeAscii5x7(dst, textX * 6, textY * 8, textMap[(textY * TEXT_MAP_WIDTH) + textX]);
+		}
+	}
+}
+
+bool CRTVideo::pixel(uint8_t * dst, uint8_t x, uint8_t y, uint8_t value)
+{
+	if((x >= PIXEL_WIDTH)||(y >= PIXEL_HEIGHT))
+	{
+		return false;
+	}
+	dst[(y * PIXEL_WIDTH) + x] = value;
+		
+	return true;
+}
+
+bool CRTVideo::line(uint8_t * dst, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t value)
+{
+	//if((x1 > x2)||(y1 > y2))
+	//{
+	//	return false;
+	//}
+	//draw vertical segments on each x
+	//Swap x1, x2 if needed
+	
+	if(x1 < x2)
+	{
+		for(int i = x1; i < x2; i++)
+		{
+			if(y1 < y2)
+			{
+				float yStart = y1 + ((float)(i - x1) / (float)(x2 - x1)) * (float)(y2 - y1);
+				float yEnd = y1 + ((float)(i - x1 + 1) / (float)(x2 - x1)) * (float)(y2 - y1);
+				for(int j = yStart; j <= yEnd; j++)
+				{
+					pixel(dst, i, j, value);
+				}
+			}
+			else
+			{
+				float yStart = y1 - ((float)(i - x1) / (float)(x2 - x1)) * (float)(y1 - y2);
+				float yEnd = y1 - ((float)(i - x1 + 1) / (float)(x2 - x1)) * (float)(y1 - y2);
+				for(int j = yStart; j >= yEnd; j--)
+				{
+					pixel(dst, i, j, value);
+				}
+			}
+		}
+	}
+	else
+	{
+		for(int i = x2; i < x1; i++)
+		{
+			if(y1 < y2)
+			{
+				float yStart = (float)y2 - ((float)(i - x2) / (float)(x1 - x2)) * (float)(y2 - y1);
+				float yEnd = (float)y2 - ((float)(i - x2 + 1) / (float)(x1 - x2)) * (float)(y2 - y1);
+				for(int j = yStart; j >= yEnd; j--)
+				{
+					pixel(dst, i, j, value);
+				}
+			}
+			else
+			{
+				float yStart = (float)y2 + ((float)(i - x2) / (float)(x1 - x2)) * (float)(y1 - y2);
+				float yEnd = (float)y2 + ((float)(i - x2 + 1) / (float)(x1 - x2)) * (float)(y1 - y2);
+				for(int j = yStart; j <= yEnd; j++)
+				{
+					pixel(dst, i, j, value);
+				}
+			}
+		}
+	}
+	
+	
+	// eh?
+	
+	//if(x1 > x2)
+	//{
+	//	int tmp = x1;
+	//	x1 = x2;
+	//	x2 = tmp;
+	//	tmp = y1;
+	//	y1 = y2;
+	//	y2 = tmp;
+	//}
+	//for( int i = 0; i <= (x2 - x1); i++ )
+	//{
+	//	int16_t start;
+	//	int16_t end;
+	//	if(y2 > y1)
+	//	{
+	//		start = y1 + (((float)i/(float)(x2 - x1)) * (float)(y2 - y1));
+	//		end = y1 + (((float)(i + 1)/(float)(x2 - x1)) * (float)(y2 - y1));
+	//		for( int j = start; j <= end; j++ )
+	//		{
+	//			pixel(dst, x1 + i, j, 0xFF);
+	//		}
+	//	}
+	//	else
+	//	{
+	//		start = y2 + (((float)i/(float)(x2 - x1)) * (float)(y1 - y2));
+	//		end = y2 + (((float)(i + 1)/(float)(x2 - x1)) * (float)(y1 - y2));
+	//		for( int j = start; j <= end; j++ )
+	//		{
+	//			pixel(dst, x1 + i, j, 0xFF);
+	//		}
+	//	}
+	//}
+	return true;
 }
 
 void CRTVideo::shiftTextUp(void)

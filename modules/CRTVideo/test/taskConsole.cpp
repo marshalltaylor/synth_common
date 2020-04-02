@@ -123,7 +123,7 @@ void taskConsolePrintHelp(void)
 //strMsg_t globoMsg = {0};
 extern "C" void taskConsoleStart(void * argument)
 {
-	uint16_t nextUpdate = 0;
+	uint32_t nextUpdate = 0;
 #ifdef USE_LOGGING
 	consoleDebug.setStamp("Console", 7);
 	consoleDebug.setMode(LOG_MODE_DEFAULT);
@@ -139,7 +139,6 @@ extern "C" void taskConsoleStart(void * argument)
 	{
 		crt.writeChar(str[i]);
 	}
-	
 	while(1)
 	{
 		if(console.bytesAvailable())
@@ -289,7 +288,28 @@ extern "C" void taskConsoleStart(void * argument)
 		if(now > nextUpdate)
 		{
 			nextUpdate = nextUpdate + 33;
-			crt.drawFrame();
+			if(nextUpdate > 0xFFFF)
+			{
+				nextUpdate -= 0xFFFF;
+			}
+			//Old method:  crt.drawFrame();
+			uint8_t * buf = NULL;
+			if(crt.getBlank(&buf))
+			{
+				crt.console(buf);
+
+				crt.line(buf, 94, 8, 94+17, 72, 0xA0);
+				crt.line(buf, 94+17, 72, 94, 136, 0xA0);
+				crt.line(buf, 94, 136, 94-17, 72, 0xA0);
+				crt.line(buf, 94-17, 72, 94, 8, 0xA0);
+
+				crt.line(buf, 94, 10, 94+15, 72, 0xFF);
+				crt.line(buf, 94+15, 72, 94, 134, 0xFF);
+				crt.line(buf, 94, 134, 94-15, 72, 0xFF);
+				crt.line(buf, 94-15, 72, 94, 10, 0xFF);
+
+				crt.swap();
+			}
 			//Thing that happens only so often -- don't block here
 		}
 		// Clock segment driver

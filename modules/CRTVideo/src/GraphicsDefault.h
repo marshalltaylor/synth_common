@@ -4,7 +4,7 @@
 extern "C" {
 #endif
 
-#define ASCII_BLACK_LEVEL 0x7F
+#define ASCII_BLACK_LEVEL 98
 
 extern uint8_t asciiLUT[];
 
