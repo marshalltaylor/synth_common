@@ -2,6 +2,8 @@
 #define CRTVIDEO_H
 #include <stdint.h>
 
+#include "bitmaps.h"
+
 #define TEXT_MAP_HEIGHT 18
 #define TEXT_MAP_WIDTH 30
 
@@ -21,6 +23,7 @@ public:
 	bool pixel(uint8_t * dst, uint8_t x, uint8_t y, uint8_t value);
 	bool line(uint8_t * dst, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t value);
 	//void setTextRegion(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2); 
+	bool drawSprite(uint8_t * dst, uint8_t x, uint8_t y, sprite_t * spriteInput, uint8_t nFrame);
 	
 private:
 	void shiftTextUp(void);

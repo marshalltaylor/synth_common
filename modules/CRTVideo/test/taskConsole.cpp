@@ -145,6 +145,7 @@ extern "C" void taskConsoleStart(void * argument)
 		{
 			char c = (char)console.read();
 			crt.writeChar(c);
+			localPrintf("%c", c);
 			//
 			//switch(c)
 			//{
@@ -298,10 +299,10 @@ extern "C" void taskConsoleStart(void * argument)
 			{
 				crt.console(buf);
 
-				crt.line(buf, 94, 8, 94+17, 72, 0xA0);
-				crt.line(buf, 94+17, 72, 94, 136, 0xA0);
-				crt.line(buf, 94, 136, 94-17, 72, 0xA0);
-				crt.line(buf, 94-17, 72, 94, 8, 0xA0);
+				crt.line(buf, 94, 6, 94+17, 72, 0xA0);
+				crt.line(buf, 94+17, 72, 94, 138, 0xA0);
+				crt.line(buf, 94, 138, 94-17, 72, 0xA0);
+				crt.line(buf, 94-17, 72, 94, 6, 0xA0);
 
 				crt.line(buf, 94, 10, 94+15, 72, 0xFF);
 				crt.line(buf, 94+15, 72, 94, 134, 0xFF);

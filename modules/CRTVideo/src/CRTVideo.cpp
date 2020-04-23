@@ -251,6 +251,28 @@ bool CRTVideo::line(uint8_t * dst, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y
 	return true;
 }
 
+bool CRTVideo::drawSprite(uint8_t * dst, uint8_t x, uint8_t y, sprite_t * src, uint8_t nFrame)
+{
+	if((x >= PIXEL_WIDTH)||(y >= PIXEL_HEIGHT))
+	{
+		return false;
+	}
+	//Consider more boundary exclusions here
+	
+	//Scan all sprite pixels and draw into destination
+	for(int iY = 0; iY < src->height; iY++)
+	{
+		for(int iX = 0; iX < src->width; iX++)
+		{
+			//full scale, conceptual usage:
+			//dst[((iY + y) * PIXEL_WIDTH) + iX + x] = src->pBitmapSource->data[((iY + src->y) * src->pBitmapSource->width) + iX + src->x];
+			dst[((iY + y) * PIXEL_WIDTH) + iX + x] = ((0xFF - (src->pBitmapSource->data[((iY + src->y) * src->pBitmapSource->width) + iX + src->x])) >> 2) + ASCII_BLACK_LEVEL;
+			//((0xFF - src[((srcY + line) * srcW) + srcX + pixel]) >> 2) + 191;
+		}
+	}
+	return true;
+}
+
 void CRTVideo::shiftTextUp(void)
 {
 	int i;
