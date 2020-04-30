@@ -51,10 +51,11 @@ void CRTVideo::writeChar(char c)
 			shiftTextUp();
 			cursorY = TEXT_MAP_HEIGHT - 2;
 		}
-		return;
-	}
-	else if(c == '\r')
-	{
+		//Disabled for rx on line feed only
+//		return;
+//	}
+//	else if(c == '\r')
+//	{
 		cursorX = 1;
 		return;
 	}
