@@ -252,7 +252,7 @@ bool CRTVideo::line(uint8_t * dst, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y
 	return true;
 }
 
-bool CRTVideo::drawSprite(uint8_t * dst, uint8_t x, uint8_t y, sprite_t * src, uint8_t nFrame)
+bool CRTVideo::drawSprite(uint8_t * dst, Sprite * pSprite, int16_t x, int16_t y)
 {
 	if((x >= PIXEL_WIDTH)||(y >= PIXEL_HEIGHT))
 	{
@@ -261,15 +261,29 @@ bool CRTVideo::drawSprite(uint8_t * dst, uint8_t x, uint8_t y, sprite_t * src, u
 	//Consider more boundary exclusions here
 	
 	//Scan all sprite pixels and draw into destination
-	for(int iY = 0; iY < src->height; iY++)
+	for(int iY = 0; iY < pSprite->height; iY++)
 	{
-		for(int iX = 0; iX < src->width; iX++)
+		for(int iX = 0; iX < pSprite->width; iX++)
 		{
 			//full scale, conceptual usage:
 			//dst[((iY + y) * PIXEL_WIDTH) + iX + x] = src->pBitmapSource->data[((iY + src->y) * src->pBitmapSource->width) + iX + src->x];
-			dst[((iY + y) * PIXEL_WIDTH) + iX + x] = ((0xFF - (src->pBitmapSource->data[((iY + src->y) * src->pBitmapSource->width) + iX + src->x])) >> 2) + ASCII_BLACK_LEVEL;
+		//	dst[((iY + y) * PIXEL_WIDTH) + iX + x] = ((0xFF - (src->srcFile->data[((iY + src->height) * src->srcFile->width) + iX + src->width])) >> 2) + ASCII_BLACK_LEVEL;
 			//((0xFF - src[((srcY + line) * srcW) + srcX + pixel]) >> 2) + 191;
+			dst[((iY + y) * PIXEL_WIDTH) + iX + x] = 
+					((pSprite->srcFile->data[((iY + pSprite->yPos) * pSprite->srcFile->width) + iX + pSprite->xPos])
+					 >> 2) + ASCII_BLACK_LEVEL;
 		}
+	}
+	return true;
+}
+
+bool CRTVideo::drawLayer(uint8_t * dst, layer_t * src)
+{
+	Sprite * pSprite = src->spriteLL;
+	while(pSprite != NULL)
+	{
+		drawSprite(dst, pSprite, 0, 0);
+		pSprite = pSprite->nextSprite;
 	}
 	return true;
 }
