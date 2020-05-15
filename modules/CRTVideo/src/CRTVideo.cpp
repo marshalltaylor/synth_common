@@ -259,31 +259,22 @@ bool CRTVideo::drawSprite(uint8_t * dst, Sprite * pSprite, int16_t x, int16_t y)
 		return false;
 	}
 	//Consider more boundary exclusions here
-	
+	//Find x and y of indexed area
+	int xSrc = pSprite->index * pSprite->width;
+	while( xSrc >= PIXEL_WIDTH )
+		xSrc -= PIXEL_WIDTH;
+	int ySrc = pSprite->height * (pSprite->index/(PIXEL_WIDTH/pSprite->width));
 	//Scan all sprite pixels and draw into destination
 	for(int iY = 0; iY < pSprite->height; iY++)
 	{
 		for(int iX = 0; iX < pSprite->width; iX++)
 		{
-			//full scale, conceptual usage:
-			//dst[((iY + y) * PIXEL_WIDTH) + iX + x] = src->pBitmapSource->data[((iY + src->y) * src->pBitmapSource->width) + iX + src->x];
-		//	dst[((iY + y) * PIXEL_WIDTH) + iX + x] = ((0xFF - (src->srcFile->data[((iY + src->height) * src->srcFile->width) + iX + src->width])) >> 2) + ASCII_BLACK_LEVEL;
-			//((0xFF - src[((srcY + line) * srcW) + srcX + pixel]) >> 2) + 191;
-			dst[((iY + y) * PIXEL_WIDTH) + iX + x] = 
-					((pSprite->srcFile->data[((iY + pSprite->yPos) * pSprite->srcFile->width) + iX + pSprite->xPos])
-					 >> 2) + ASCII_BLACK_LEVEL;
+			int16_t sourcePixel = ((iY + ySrc) * pSprite->srcFile->width) + iX + xSrc;
+			if(pSprite->srcFile->data[sourcePixel] != 0xFF)
+			{
+				dst[((iY + y) * PIXEL_WIDTH) + iX + x] = ((pSprite->srcFile->data[sourcePixel]) >> 2) + ASCII_BLACK_LEVEL;
+			}
 		}
-	}
-	return true;
-}
-
-bool CRTVideo::drawLayer(uint8_t * dst, layer_t * src)
-{
-	Sprite * pSprite = src->spriteLL;
-	while(pSprite != NULL)
-	{
-		drawSprite(dst, pSprite, 0, 0);
-		pSprite = pSprite->nextSprite;
 	}
 	return true;
 }

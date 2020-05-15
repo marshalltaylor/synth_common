@@ -18,8 +18,6 @@ typedef struct bitmap_file
 } bitmap_file_t;
 
 /***** Base Classes *****/
-// Sprite
-
 class Sprite
 {
 public:
@@ -29,19 +27,10 @@ public:
 	uint16_t width;
 	uint16_t height;
 	bitmap_file_t * srcFile;
+	uint16_t index;
 	Sprite * prevSprite = 0;
 	Sprite * nextSprite = 0;
 };
-
-// Layer
-typedef struct layer
-{
-	int16_t xOffset;
-	int16_t yOffset;
-	uint16_t width;
-	uint16_t height;
-	Sprite * spriteLL;// = NULL;
-} layer_t;
 
 #ifdef __cplusplus
 }
