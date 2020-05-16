@@ -17,20 +17,34 @@ typedef struct bitmap_file
 	uint8_t * data;
 } bitmap_file_t;
 
-/***** Base Classes *****/
-class Sprite
+typedef enum bitmap_type
 {
-public:
-	Sprite(void){};
-	uint16_t xPos;
-	uint16_t yPos;
-	uint16_t width;
-	uint16_t height;
+	BITMAP_1X1 = 0,
+	BITMAP_1X2 = 1,
+	BITMAP_2X3 = 2,
+} bitmap_type_t;
+
+typedef struct virtual_bitmap_type
+{
+	bitmap_type_t type;
 	bitmap_file_t * srcFile;
-	uint16_t index;
-	Sprite * prevSprite = 0;
-	Sprite * nextSprite = 0;
-};
+	uint8_t * data;
+} virtual_bitmap_type_t;
+
+typedef struct basic_bitmap_type : public virtual_bitmap_type
+{
+	uint8_t tileTable;
+} basic_bitmap_type_t;
+
+typedef struct tall_bitmap_type : public virtual_bitmap_type
+{
+	uint8_t tileTable[2];
+} tall_bitmap_type_t;
+
+typedef struct large_tall_bitmap_type : public virtual_bitmap_type
+{
+	uint8_t tileTable[6];
+} large_tall_bitmap_type_t;
 
 #ifdef __cplusplus
 }

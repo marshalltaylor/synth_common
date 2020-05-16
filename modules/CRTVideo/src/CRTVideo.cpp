@@ -103,7 +103,7 @@ void CRTVideo::drawFrame(void)
 	uint8_t textY = 1;
 
 	uint8_t * nextFrame = 0;
-	if(bspDACGetBufferBlank(&nextFrame)) //address of pointer
+	if(bspDACGetBufferBlank(&nextFrame, 0x00)) //address of pointer
 	{
 		for(textY = 0; textY < TEXT_MAP_HEIGHT; textY++)
 		{
@@ -117,9 +117,9 @@ void CRTVideo::drawFrame(void)
 	bspIOPinWrite(D31, 1);
 }
 
-bool CRTVideo::getBlank(uint8_t ** output)
+bool CRTVideo::getBlank(uint8_t ** output, uint8_t fill)
 {
-	if(bspDACGetBufferBlank(output)) //address of pointer
+	if(bspDACGetBufferBlank(output, fill)) //address of pointer
 	{
 		return true;
 	}
@@ -252,30 +252,68 @@ bool CRTVideo::line(uint8_t * dst, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y
 	return true;
 }
 
-bool CRTVideo::drawSprite(uint8_t * dst, Sprite * pSprite, int16_t x, int16_t y)
+bool CRTVideo::drawBitmap(uint8_t * dst, virtual_bitmap_type_t * pBitmap, int16_t x, int16_t y)
 {
 	if((x >= PIXEL_WIDTH)||(y >= PIXEL_HEIGHT))
 	{
 		return false;
 	}
-	//Consider more boundary exclusions here
-	//Find x and y of indexed area
-	int xSrc = pSprite->index * pSprite->width;
-	while( xSrc >= PIXEL_WIDTH )
-		xSrc -= PIXEL_WIDTH;
-	int ySrc = pSprite->height * (pSprite->index/(PIXEL_WIDTH/pSprite->width));
-	//Scan all sprite pixels and draw into destination
-	for(int iY = 0; iY < pSprite->height; iY++)
+	switch(pBitmap->type)
 	{
-		for(int iX = 0; iX < pSprite->width; iX++)
+		case BITMAP_1X1:
 		{
-			int16_t sourcePixel = ((iY + ySrc) * pSprite->srcFile->width) + iX + xSrc;
-			if(pSprite->srcFile->data[sourcePixel] != 0xFF)
+			//basic_bitmap_type_t * pBitmapCast = (basic_bitmap_type_t *)pBitmap->data;
+			//Consider more boundary exclusions here
+			//Find x and y of indexed area
+			int xSrc = pBitmap->data[0] * pBitmap->srcFile->divWidth;
+			while( xSrc >= PIXEL_WIDTH )
+				xSrc -= PIXEL_WIDTH;
+			int ySrc = pBitmap->srcFile->divHeight * (pBitmap->data[0]/(PIXEL_WIDTH/pBitmap->srcFile->divWidth));
+			
+			//Scan all sprite pixels and draw into destination
+			for(int iY = 0; iY < pBitmap->srcFile->divHeight; iY++)
 			{
-				dst[((iY + y) * PIXEL_WIDTH) + iX + x] = ((pSprite->srcFile->data[sourcePixel]) >> 2) + ASCII_BLACK_LEVEL;
+				for(int iX = 0; iX < pBitmap->srcFile->divWidth; iX++)
+				{
+					int16_t sourcePixel = ((iY + ySrc) * pBitmap->srcFile->width) + iX + xSrc;
+					if(pBitmap->srcFile->data[sourcePixel] != 0xFF)
+					{
+						dst[((iY + y) * PIXEL_WIDTH) + iX + x] =
+							((pBitmap->srcFile->data[sourcePixel]) >> 2)
+							+ ASCII_BLACK_LEVEL;
+					}
+				}
 			}
 		}
+		break;
+		default:
+		case BITMAP_1X2:
+		case BITMAP_2X3:
+		{
+			return false;
+		}
+		break;
 	}
+	////Consider more boundary exclusions here
+	////Find x and y of indexed area
+	//int xSrc = pSprite->index * pSprite->width;
+	//while( xSrc >= PIXEL_WIDTH )
+	//	xSrc -= PIXEL_WIDTH;
+	//int ySrc = pSprite->height * (pSprite->index/(PIXEL_WIDTH/pSprite->width));
+	////Scan all sprite pixels and draw into destination
+	//for(int iY = 0; iY < pSprite->height; iY++)
+	//{
+	//	for(int iX = 0; iX < pSprite->width; iX++)
+	//	{
+	//		int16_t sourcePixel = ((iY + ySrc) * pSprite->srcFile->width) + iX + xSrc;
+	//		if(pSprite->srcFile->data[sourcePixel] != 0xFF)
+	//		{
+	//			dst[((iY + y) * PIXEL_WIDTH) + iX + x] =
+	//				((pSprite->srcFile->data[sourcePixel]) >> 2)
+	//				+ ASCII_BLACK_LEVEL;
+	//		}
+	//	}
+	//}
 	return true;
 }
 
