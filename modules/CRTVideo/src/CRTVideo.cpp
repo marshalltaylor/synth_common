@@ -276,9 +276,16 @@ bool CRTVideo::drawBitmap(uint8_t * dst, virtual_bitmap_type_t * pBitmap, int16_
 				for(int iX = 0; iX < pBitmap->srcFile->divWidth; iX++)
 				{
 					int16_t sourcePixel = ((iY + ySrc) * pBitmap->srcFile->width) + iX + xSrc;
-					if(pBitmap->srcFile->data[sourcePixel] != 0xFF)
+					int16_t destX = iX + x;
+					int16_t destY = iY + y;
+					
+					if((pBitmap->srcFile->data[sourcePixel] != 0xFF) &&
+						(destX >= 0) &&
+						(destX < PIXEL_WIDTH) &&
+						(destY >= 0) &&
+						(destY < 144))
 					{
-						dst[((iY + y) * PIXEL_WIDTH) + iX + x] =
+						dst[(destY * PIXEL_WIDTH) + destX] =
 							((pBitmap->srcFile->data[sourcePixel]) >> 2)
 							+ ASCII_BLACK_LEVEL;
 					}
@@ -286,9 +293,67 @@ bool CRTVideo::drawBitmap(uint8_t * dst, virtual_bitmap_type_t * pBitmap, int16_
 			}
 		}
 		break;
-		default:
 		case BITMAP_1X2:
+		{
+			//Top
+			int xSrc = pBitmap->data[0] * pBitmap->srcFile->divWidth;
+			while( xSrc >= PIXEL_WIDTH )
+				xSrc -= PIXEL_WIDTH;
+			int ySrc = pBitmap->srcFile->divHeight * (pBitmap->data[0]/(PIXEL_WIDTH/pBitmap->srcFile->divWidth));
+			
+			//Scan all sprite pixels and draw into destination
+			for(int iY = 0; iY < pBitmap->srcFile->divHeight; iY++)
+			{
+				for(int iX = 0; iX < pBitmap->srcFile->divWidth; iX++)
+				{
+					int16_t sourcePixel = ((iY + ySrc) * pBitmap->srcFile->width) + iX + xSrc;
+					int16_t destX = iX + x;
+					int16_t destY = iY + y;
+					
+					if((pBitmap->srcFile->data[sourcePixel] != 0xFF) &&
+						(destX >= 0) &&
+						(destX < PIXEL_WIDTH) &&
+						(destY >= 0) &&
+						(destY < 144))
+					{
+						dst[(destY * PIXEL_WIDTH) + destX] =
+							((pBitmap->srcFile->data[sourcePixel]) >> 2)
+							+ ASCII_BLACK_LEVEL;
+					}
+				}
+			}
+			//Bottom
+			xSrc = pBitmap->data[1] * pBitmap->srcFile->divWidth;
+			while( xSrc >= PIXEL_WIDTH )
+				xSrc -= PIXEL_WIDTH;
+			ySrc = pBitmap->srcFile->divHeight * (pBitmap->data[1]/(PIXEL_WIDTH/pBitmap->srcFile->divWidth));
+			
+			//Scan all sprite pixels and draw into destination
+			for(int iY = 0; iY < pBitmap->srcFile->divHeight; iY++)
+			{
+				for(int iX = 0; iX < pBitmap->srcFile->divWidth; iX++)
+				{
+					int16_t sourcePixel = ((iY + ySrc) * pBitmap->srcFile->width) + iX + xSrc;
+					int16_t destX = iX + x;
+					int16_t destY = iY + y + pBitmap->srcFile->divHeight;
+					
+					if((pBitmap->srcFile->data[sourcePixel] != 0xFF) &&
+						(destX >= 0) &&
+						(destX < PIXEL_WIDTH) &&
+						(destY >= 0) &&
+						(destY < 144))
+					{
+						dst[(destY * PIXEL_WIDTH) + destX] =
+							((pBitmap->srcFile->data[sourcePixel]) >> 2)
+							+ ASCII_BLACK_LEVEL;
+					}
+				}
+			}
+			
+		}
+		break;
 		case BITMAP_2X3:
+		default:
 		{
 			return false;
 		}
