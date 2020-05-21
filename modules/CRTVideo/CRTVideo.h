@@ -23,6 +23,7 @@ public:
 	bool pixel(uint8_t * dst, uint8_t x, uint8_t y, uint8_t value);
 	bool line(uint8_t * dst, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t value);
 	//void setTextRegion(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2); 
+	bool drawTile(uint8_t * dst, int16_t tileNumber, bitmap_file_t * srcFile, int16_t x, int16_t y);
 	bool drawBitmap(uint8_t * dst, virtual_bitmap_type_t * src, int16_t x, int16_t y);
 	
 private:
