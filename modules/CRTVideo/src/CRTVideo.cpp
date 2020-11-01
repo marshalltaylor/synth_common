@@ -38,7 +38,12 @@ void CRTVideo::init(void)
 		if(((i+1) % 6) == 0) localPrintf("\n");
 	}
 	bspDACInit();
-	//bspDACInterlace(false);
+	interlace(false);
+}
+
+void CRTVideo::interlace(bool var)
+{
+	bspDACInterlace(var);
 }
 
 void CRTVideo::writeChar(char c)

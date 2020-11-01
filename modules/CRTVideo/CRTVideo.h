@@ -5,7 +5,7 @@
 #include "bitmaps.h"
 
 #define TEXT_MAP_HEIGHT 18
-#define TEXT_MAP_WIDTH 30
+#define TEXT_MAP_WIDTH 31
 
 #define PIXEL_WIDTH 192
 #define PIXEL_HEIGHT 144
@@ -15,6 +15,7 @@ class CRTVideo
 public:
 	CRTVideo(void);
 	void init(void);
+	void interlace(bool var);
 	void writeChar(char c);
 	void drawFrame(void);
 	bool getBlank(uint8_t ** output, uint8_t fill);

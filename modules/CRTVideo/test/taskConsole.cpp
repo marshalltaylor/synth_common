@@ -295,7 +295,7 @@ extern "C" void taskConsoleStart(void * argument)
 			}
 			//Old method:  crt.drawFrame();
 			uint8_t * buf = NULL;
-			if(crt.getBlank(&buf))
+			if(crt.getBlank(&buf, 0x00))
 			{
 				crt.console(buf);
 
