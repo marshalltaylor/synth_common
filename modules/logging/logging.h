@@ -24,10 +24,12 @@ public:
 	void setVPrintf(bspVPrintf_t function);
 	void setStamp(const char * data, uint8_t len);
 	void setMode(loggingMode_t mode);
-	
-private:
+
+	//Direct access
 	bspPrintf_t pPrintf = NULL;
 	bspVPrintf_t pVPrintf = NULL;
+
+private:
 	loggingMode_t logMode = LOG_MODE_DEFAULT;
 	char stamp[LOGGING_STAMP_MAX_LEN + 1] = {0};
 	char line[LOGGING_STAMP_MAX_LEN + LOGGING_LINE_MAX_LEN + 1] = {0};

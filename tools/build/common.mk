@@ -2,11 +2,11 @@
 # Paths
 #######################################
 # Inputs:
-#
+#  SYNTH_COMMON_ROOT
+#  REPO_ROOT
 # OUTPUT_LIB_NAME -- lib.a
 #   Needed for archiver target
 # TODO:
-# REPO_ROOT -- might be useful
 # $(STATIC_LIBS), should the common file also do abnormal things, like linking?
 
 # Default target

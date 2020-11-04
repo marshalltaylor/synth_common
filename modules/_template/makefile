@@ -1,5 +1,6 @@
 # _template module
-REPO_ROOT = ../..
+SYNTH_COMMON_ROOT := ../..
+REPO_ROOT = ../$(SYNTH_COMMON_ROOT)
 
 C_SOURCES = \
 src/template.cpp \
@@ -19,7 +20,7 @@ OUTPUT_LIB_NAME = template.a
 
 default: info all
 
-include $(REPO_ROOT)/tools/build/common.mk
+include $(SYNTH_COMMON_ROOT)/tools/build/common.mk
 
 all: $(BUILD_DIR)/$(OUTPUT_LIB_NAME)
 
