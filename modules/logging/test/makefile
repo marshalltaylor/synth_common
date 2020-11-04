@@ -1,5 +1,6 @@
-# STM32F4xx bsp uart test
-REPO_ROOT = ../../..
+# Module test
+SYNTH_COMMON_ROOT := ../../..
+REPO_ROOT = ../$(SYNTH_COMMON_ROOT)
 
 ifeq ($(strip $(board)),)
 ifneq ('$(MAKECMDGOALS)','clean')
@@ -16,10 +17,10 @@ src
 
 C_INCLUDES = \
 $(REPO_ROOT)/bsp \
-$(REPO_ROOT)/modules/logging
+$(SYNTH_COMMON_ROOT)/modules/logging
 
 STATIC_LIBS = \
-$(REPO_ROOT)/modules/logging/build/logging.a \
+$(SYNTH_COMMON_ROOT)/modules/logging/build/logging.a \
 $(REPO_ROOT)/bsp/build/bsp_$(board).a
 
 # objects
@@ -28,9 +29,9 @@ OBJECTS = $(patsubst %c,%o,$(patsubst %cpp,%o,$(C_SOURCES)))
 # rules
 default: all
 
-include $(REPO_ROOT)/tools/build/catalog.mk
+include $(SYNTH_COMMON_ROOT)/tools/build/catalog.mk
 
-include $(REPO_ROOT)/tools/build/common.mk
+include $(SYNTH_COMMON_ROOT)/tools/build/common.mk
 
 # linker
 $(BUILD_DIR)/output.elf: build_dirs $(addprefix $(BUILD_DIR)/obj/, $(OBJECTS))
