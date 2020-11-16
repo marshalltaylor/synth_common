@@ -31,7 +31,8 @@ $(addprefix $(BUILD_DIR)/dep/,$(SOURCE_DIRS))
 
 # Tools
 #GCC_PATH = /cygdrive/c/STM32/gcc-arm-none-eabi/bin
-GCC_PATH = C:/STM32/gcc-arm-none-eabi/bin
+#GCC_PATH = C:/STM32/gcc-arm-none-eabi/bin
+GCC_PATH = C:/STM32/gcc_9_2020-q2-update/bin
 CC = $(GCC_PATH)/arm-none-eabi-gcc
 PP = $(GCC_PATH)/arm-none-eabi-g++
 AS = $(GCC_PATH)/arm-none-eabi-as
@@ -47,7 +48,7 @@ GDB = $(GCC_PATH)/arm-none-eabi-gdb
 # c
 #  -DUSE_HAL_DRIVER -DSTM32F7xx  '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -fmessage-length=0 -Og -ffunction-sections
 # -v
-CFLAGS = -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -DSTM32F4xx -DSTM32F446xx -g -Wall -Werror -c -O0
+CFLAGS = -DUSE_FULL_LL_DRIVER -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -DSTM32F4xx -DSTM32F446xx -g -Wall -Werror -c -O0
 
 # Generate dependency information
 CFLAGS += -MMD -MP -MF "$(@:$(BUILD_DIR)/obj/%.o=$(BUILD_DIR)/dep/%.d)"
