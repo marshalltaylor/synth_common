@@ -13,6 +13,7 @@ public:
 	void initPort(comPort_t);
 //	void begin(unsigned long baud) { begin(baud, 0); }
 	void begin(unsigned long baud);
+	void setRxByteCallback(void (*inputCallback)(char));
 
 	//	void init(UartInstance* HAL_UART);
 //    void end();
@@ -31,6 +32,7 @@ public:
 private:
 	comPortInterface_t bspSerialMidiObj;
 //    uint8_t _config;
+	void (*rxByteCallback)(char);
 };
 
 extern HardwareSerial TestSerial;
