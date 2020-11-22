@@ -4,6 +4,8 @@ REPO_ROOT = ../$(SYNTH_COMMON_ROOT)
 
 C_SOURCES = \
 src/CRTVideo.cpp \
+src/fonts.cpp \
+src/textBox.cpp \
 src/GraphicsDefault.c
 
 SOURCE_DIRS = src
