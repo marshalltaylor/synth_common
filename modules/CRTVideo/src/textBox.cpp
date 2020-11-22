@@ -80,80 +80,6 @@ uint16_t TextBuffer::bytesUsed(void)
     return indexDelta;
 }
 
-uint16_t TextBuffer::indexLastNLines(int16_t lines, uint16_t width)
-{
-    if(!data || (nextToWrite == start))
-    {
-        return 0;
-    }
-	//Start at the beginning of the document and scan, keeping track of the nth from last item
-	int firstChar;
-	int lastChar = bytesUsed() - 1;
-    int i = 0;
-
-    int charCtr = 0;
-
-    // 1.  Count all lines in the document
-    int lineCtr = 1; // a line with no breaks or ends is still a line
-    for(i = 0; i < lastChar; i++)
-    {
-        if(getChar(i) == '\n')
-        {
-			//bspPrintf(" N@%d", i);
-            charCtr = 0;
-            lineCtr++;
-        }
-        else
-        {
-            charCtr++;
-            if(charCtr == width)
-            {
-				//bspPrintf(" %d", i + 1);
-                charCtr = 0;
-                lineCtr++;
-            }
-        }
-	}
-	//bspPrintf("\n");
-	//bspPrintf("After line count, %d, %d -- %d\n", charCtr, lineCtr, lines);
-	// 2. Scan through to find the requested start line
-	i = 0;
-	if(lines < 0) lines = 0;
-	int targetLine = lineCtr - lines + 1; //identify target line
-	lineCtr = 1;
-	firstChar = 0;
-	charCtr = 0;
-	while((i < lastChar)&&(lineCtr < targetLine))
-    {
-		char c = getChar(i);
-        if(c == '\n')
-        {
-            charCtr = 0;
-            lineCtr++;
-			firstChar = i + 1;
-        }
-        else
-        {
-            charCtr++;
-            if(charCtr == width)
-            {
-                charCtr = 0;
-                lineCtr++;
-				firstChar = i + 1;
-            }
-        }
-		i++;
-	}
-	//if((firstChar < 0)||(firstChar >= lastChar))
-	//{
-	//	while(1);
-	//	//bspPrintf("Error: %d, %d\n", firstChar, lastChar);
-	//	return 0;
-	//}
-	//bspPrintf("AT return, %d, %d\n", firstChar, lastChar);
-    return firstChar;
-}
-
 //uint16_t TextBuffer::indexLastNLines(uint16_t lines, uint16_t width)
 //{
 //    if(!data || (nextToWrite == start))
@@ -210,7 +136,6 @@ TextBox::TextBox(void)
     hPx = 0;
     wC = 0;
     hC = 0;
-    scroll = 0;
 }
 
 void TextBox::box(int32_t x1, int32_t y1, int32_t w1, int32_t h1)
@@ -245,19 +170,100 @@ void TextBox::setTextBuffer(TextBuffer * b)
     data = b;
 }
 
-void TextBox::setScroll(int16_t value)
+uint16_t TextBox::getHeightInLines(void)
 {
-    scroll = value;
+	return hC;
+}
+
+uint16_t TextBox::countLines(void)
+{
+	//Start at the beginning of the document and scan, keeping track of the nth from last item
+	int lastChar = data->bytesUsed() - 1;
+    int i = 0;
+
+    int charCtr = 0;
+
+    // 1.  Count all lines in the document
+    int lineCtr = 1; // a line with no breaks or ends is still a line
+    for(i = 0; i < lastChar; i++)
+    {
+        if(data->getChar(i) == '\n')
+        {
+			//bspPrintf(" N@%d", i);
+            charCtr = 0;
+            lineCtr++;
+        }
+        else
+        {
+            charCtr++;
+            if(charCtr == wC)
+            {
+				//bspPrintf(" %d", i + 1);
+                charCtr = 0;
+                lineCtr++;
+            }
+        }
+	}
+	return lineCtr;
+}
+
+uint16_t TextBox::indexCharAtLine(int16_t lineNum)
+{
+	if(lineNum < 0) lineNum = 0;
+	//Start at the beginning of the document and scan, keeping track of the nth from last item
+	int firstChar = 0;
+	int lastChar = data->bytesUsed() - 1;
+    int i = 0;
+
+    int charCtr = 0;
+	int lineCtr = 1;
+
+	while((i < lastChar)&&(lineCtr < lineNum))
+    {
+		char c = data->getChar(i);
+        if(c == '\n')
+        {
+            charCtr = 0;
+            lineCtr++;
+			firstChar = i + 1;
+        }
+        else
+        {
+            charCtr++;
+            if(charCtr == wC)
+            {
+                charCtr = 0;
+                lineCtr++;
+				firstChar = i + 1;
+            }
+        }
+		i++;
+	}
+	//if((firstChar < 0)||(firstChar >= lastChar))
+	//{
+	//	while(1);
+	//	//bspPrintf("Error: %d, %d\n", firstChar, lastChar);
+	//	return 0;
+	//}
+	//bspPrintf("AT return, %d, %d\n", firstChar, lastChar);
+    return firstChar;
 }
 
 void TextBox::draw(uint8_t * dst)
+{
+	//Auto view
+	draw(dst, countLines() + 1 - hC);
+}
+
+void TextBox::draw(uint8_t * dst, int16_t lineFromStart)
 {
     if(!data || !font)
     {
         return;
     }
     int dataLen = data->bytesUsed();
-    int readChar = data->indexLastNLines(hC - 1 + scroll, wC);
+
+    int readChar = indexCharAtLine(lineFromStart);
     int xPx = xPos;
     int yPx = yPos;
     int lineCtr = 0;
