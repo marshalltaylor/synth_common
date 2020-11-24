@@ -257,7 +257,7 @@ void TextBox::draw(uint8_t * dst)
 
 void TextBox::draw(uint8_t * dst, int16_t lineFromStart)
 {
-    if(!data || !font)
+    if(!data || !font || (lineFromStart > countLines()))
     {
         return;
     }
