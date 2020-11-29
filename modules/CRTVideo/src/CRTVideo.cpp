@@ -175,6 +175,39 @@ void CRTVideo::box(uint8_t * dst, int32_t x1, int32_t y1, int32_t w1, int32_t h1
 	line(dst, x1, y1+h1, x1, y1, data);
 }
 
+//bool CRTVideo::drawTile(uint8_t * dst, int16_t tileNumber, bitmap_file_t * srcFile, int16_t x, int16_t y)
+//{
+//	//Find x and y of indexed area
+//	int xSrc = tileNumber * srcFile->divWidth;
+//	while( xSrc >= PIXEL_WIDTH )
+//		xSrc -= PIXEL_WIDTH;
+//	int ySrc = srcFile->divHeight * (tileNumber/(PIXEL_WIDTH/srcFile->divWidth));
+//	
+//	//Scan all sprite pixels and draw into destination
+//	for(int iY = 0; iY < srcFile->divHeight; iY++)
+//	{
+//		for(int iX = 0; iX < srcFile->divWidth; iX++)
+//		{
+//			int16_t sourcePixel = ((iY + ySrc) * srcFile->width) + iX + xSrc;
+//			int16_t destX = iX + x;
+//			int16_t destY = iY + y;
+//			
+//			if((srcFile->data[sourcePixel] != 0xFF) &&
+//				(destX >= 0) &&
+//				(destX < PIXEL_WIDTH) &&
+//				(destY >= 0) &&
+//				(destY < 144))
+//			{
+//				dst[(destY * PIXEL_WIDTH) + destX] =
+//					((srcFile->data[sourcePixel]) >> 2)
+//					+ ASCII_BLACK_LEVEL;
+//			}
+//		}
+//	}
+//	return true;
+//}
+
+//For this one we'll say 0-0xFF corrisponds to black_level-0xFF
 bool CRTVideo::drawTile(uint8_t * dst, int16_t tileNumber, bitmap_file_t * srcFile, int16_t x, int16_t y)
 {
 	//Find x and y of indexed area
@@ -191,16 +224,15 @@ bool CRTVideo::drawTile(uint8_t * dst, int16_t tileNumber, bitmap_file_t * srcFi
 			int16_t sourcePixel = ((iY + ySrc) * srcFile->width) + iX + xSrc;
 			int16_t destX = iX + x;
 			int16_t destY = iY + y;
-			
-			if((srcFile->data[sourcePixel] != 0xFF) &&
-				(destX >= 0) &&
+			uint8_t newValue; //cast back to u8 at end
+			//alpha checking omittied
+			if( (destX >= 0) &&
 				(destX < PIXEL_WIDTH) &&
 				(destY >= 0) &&
-				(destY < 144))
+				(destY < PIXEL_HEIGHT))
 			{
-				dst[(destY * PIXEL_WIDTH) + destX] =
-					((srcFile->data[sourcePixel]) >> 2)
-					+ ASCII_BLACK_LEVEL;
+				newValue = ((uint32_t)srcFile->data[sourcePixel] * (0xFF - ASCII_BLACK_LEVEL) / 0xFF) + ASCII_BLACK_LEVEL;
+				dst[(destY * PIXEL_WIDTH) + destX] = newValue;
 			}
 		}
 	}

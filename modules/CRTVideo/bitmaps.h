@@ -6,6 +6,23 @@ extern "C" {
 
 #include <stdint.h>
 
+/* General comments
+
+Create bitmaps that reference into a larger file.  You specify the tile, or
+tiles used, so the bitmap type is non-data storing.
+
+The basic bitmap type has a field 'data', for the array of bitmap tiles.
+
+The various bitmap types that inherit it all provide the actual data storage.
+
+Example:
+	img_cow.type = BITMAP_1X1;
+	img_cow.srcFile = &game_data_file;
+	img_cow.data = &img_cow.tileTable;
+	img_cow.tileTable = 8;
+
+*/
+
 /***** File *****/
 typedef struct bitmap_file
 {
