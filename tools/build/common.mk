@@ -48,7 +48,7 @@ GDB = $(GCC_PATH)/arm-none-eabi-gdb
 # c
 #  -DUSE_HAL_DRIVER -DSTM32F7xx  '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -fmessage-length=0 -Og -ffunction-sections
 # -v
-CFLAGS = -DUSE_FULL_LL_DRIVER -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -DSTM32F4xx -DSTM32F446xx -g -Wall -Werror -c -O0
+CFLAGS = -DUSE_FULL_LL_DRIVER -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -DSTM32F4xx -DSTM32F446xx -gdwarf-4 -g3 -Wall -Werror -c -O0
 
 # Generate dependency information
 CFLAGS += -MMD -MP -MF "$(@:$(BUILD_DIR)/obj/%.o=$(BUILD_DIR)/dep/%.d)"
