@@ -25,6 +25,7 @@ public:
 
 	//Graphics drawing
 	bool pixel(uint8_t * dst, uint8_t x, uint8_t y, uint8_t value);
+	bool fancyPixel(uint8_t * dst, uint8_t x, uint8_t y, uint8_t value);
 	bool line(uint8_t * dst, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t value);
 	void box(uint8_t * dst, int32_t x1, int32_t y1, int32_t w1, int32_t h1, uint8_t data);
 	bool drawTile(uint8_t * dst, int16_t tileNumber, bitmap_file_t * srcFile, int16_t x, int16_t y);

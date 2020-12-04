@@ -58,6 +58,18 @@ bool CRTVideo::pixel(uint8_t * dst, uint8_t x, uint8_t y, uint8_t value)
 	return true;
 }
 
+bool CRTVideo::fancyPixel(uint8_t * dst, uint8_t x, uint8_t y, uint8_t value)
+{
+	if((x >= PIXEL_WIDTH)||(y >= PIXEL_HEIGHT))
+	{
+		return false;
+	}
+	value = ((int(value)*(0xFF - ASCII_BLACK_LEVEL)) / 0xFF) + ASCII_BLACK_LEVEL;
+	dst[(y * PIXEL_WIDTH) + x] = value;
+
+	return true;
+}
+
 #define NUM_POINTS_LINE 200
 //Equation of a line
 // y = (m * x) + b
@@ -75,7 +87,7 @@ bool CRTVideo::line(uint8_t * dst, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y
 	bool drawing = true;
 
 	//draw the first pixel
-	pixel(dst, xPos, yPos, value);
+	fancyPixel(dst, xPos, yPos, value);
 
 	int i = 0;
 	while(drawing&&(i < NUM_POINTS_LINE + 1))
@@ -107,7 +119,7 @@ bool CRTVideo::line(uint8_t * dst, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y
 			
 			if(drawing)
 			{
-				pixel(dst, xPos, yPos, value);
+				fancyPixel(dst, xPos, yPos, value);
 			}
 		}
 	}
