@@ -47,7 +47,7 @@ void CRTVideo::swap(void)
 	bspDACSwapBuffers();
 }
 
-bool CRTVideo::pixel(uint8_t * dst, uint8_t x, uint8_t y, uint8_t value)
+bool CRTVideo::pixelRaw(uint8_t * dst, uint8_t x, uint8_t y, uint8_t value)
 {
 	if((x >= PIXEL_WIDTH)||(y >= PIXEL_HEIGHT))
 	{
@@ -58,7 +58,7 @@ bool CRTVideo::pixel(uint8_t * dst, uint8_t x, uint8_t y, uint8_t value)
 	return true;
 }
 
-bool CRTVideo::fancyPixel(uint8_t * dst, uint8_t x, uint8_t y, uint8_t value)
+bool CRTVideo::pixel(uint8_t * dst, uint8_t x, uint8_t y, uint8_t value)
 {
 	if((x >= PIXEL_WIDTH)||(y >= PIXEL_HEIGHT))
 	{
@@ -87,7 +87,7 @@ bool CRTVideo::line(uint8_t * dst, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y
 	bool drawing = true;
 
 	//draw the first pixel
-	fancyPixel(dst, xPos, yPos, value);
+	pixel(dst, xPos, yPos, value);
 
 	int i = 0;
 	while(drawing&&(i < NUM_POINTS_LINE + 1))
@@ -119,65 +119,48 @@ bool CRTVideo::line(uint8_t * dst, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y
 			
 			if(drawing)
 			{
-				fancyPixel(dst, xPos, yPos, value);
+				pixel(dst, xPos, yPos, value);
 			}
 		}
 	}
 	return true;
 }
 
-//bool CRTVideo::line(uint8_t * dst, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t value)
-//{
-//	if(x1 < x2)
-//	{
-//		for(int i = x1; i < x2; i++)
-//		{
-//			if(y1 < y2)
-//			{
-//				float yStart = y1 + ((float)(i - x1) / (float)(x2 - x1)) * (float)(y2 - y1);
-//				float yEnd = y1 + ((float)(i - x1 + 1) / (float)(x2 - x1)) * (float)(y2 - y1);
-//				for(int j = yStart; j <= yEnd; j++)
-//				{
-//					pixel(dst, i, j, value);
-//				}
-//			}
-//			else
-//			{
-//				float yStart = y1 - ((float)(i - x1) / (float)(x2 - x1)) * (float)(y1 - y2);
-//				float yEnd = y1 - ((float)(i - x1 + 1) / (float)(x2 - x1)) * (float)(y1 - y2);
-//				for(int j = yStart; j >= yEnd; j--)
-//				{
-//					pixel(dst, i, j, value);
-//				}
-//			}
-//		}
-//	}
-//	else
-//	{
-//		for(int i = x2; i < x1; i++)
-//		{
-//			if(y1 < y2)
-//			{
-//				float yStart = (float)y2 - ((float)(i - x2) / (float)(x1 - x2)) * (float)(y2 - y1);
-//				float yEnd = (float)y2 - ((float)(i - x2 + 1) / (float)(x1 - x2)) * (float)(y2 - y1);
-//				for(int j = yStart; j >= yEnd; j--)
-//				{
-//					pixel(dst, i, j, value);
-//				}
-//			}
-//			else
-//			{
-//				float yStart = (float)y2 + ((float)(i - x2) / (float)(x1 - x2)) * (float)(y1 - y2);
-//				float yEnd = (float)y2 + ((float)(i - x2 + 1) / (float)(x1 - x2)) * (float)(y1 - y2);
-//				for(int j = yStart; j <= yEnd; j++)
-//				{
-//					pixel(dst, i, j, value);
-//				}
-//			}
-//		}
-//	}
-//	return true;
-//}
+void CRTVideo::hLine(uint8_t * dst, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t value)
+{
+	if(x1 < x2)
+	{
+		for(int i = x1; i <= x2; i++)
+		{
+			pixel(dst, i, y1, value);
+		}
+	}
+	else
+	{
+		for(int i = x2; i <= x1; i++)
+		{
+			pixel(dst, i, y1, value);
+		}
+	}
+}
+
+void CRTVideo::vLine(uint8_t * dst, uint8_t x1, uint8_t y1, uint8_t y2, uint8_t value)
+{
+	if(y1 < y2)
+	{
+		for(int i = y1; i <= y2; i++)
+		{
+			pixel(dst, x1, i, value);
+		}
+	}
+	else
+	{
+		for(int i = y2; i <= y1; i++)
+		{
+			pixel(dst, x1, i, value);
+		}
+	}
+}
 
 void CRTVideo::box(uint8_t * dst, int32_t x1, int32_t y1, int32_t w1, int32_t h1, uint8_t data)
 {
@@ -186,38 +169,6 @@ void CRTVideo::box(uint8_t * dst, int32_t x1, int32_t y1, int32_t w1, int32_t h1
 	line(dst, x1+w1, y1+h1, x1, y1+h1, data);
 	line(dst, x1, y1+h1, x1, y1, data);
 }
-
-//bool CRTVideo::drawTile(uint8_t * dst, int16_t tileNumber, bitmap_file_t * srcFile, int16_t x, int16_t y)
-//{
-//	//Find x and y of indexed area
-//	int xSrc = tileNumber * srcFile->divWidth;
-//	while( xSrc >= PIXEL_WIDTH )
-//		xSrc -= PIXEL_WIDTH;
-//	int ySrc = srcFile->divHeight * (tileNumber/(PIXEL_WIDTH/srcFile->divWidth));
-//	
-//	//Scan all sprite pixels and draw into destination
-//	for(int iY = 0; iY < srcFile->divHeight; iY++)
-//	{
-//		for(int iX = 0; iX < srcFile->divWidth; iX++)
-//		{
-//			int16_t sourcePixel = ((iY + ySrc) * srcFile->width) + iX + xSrc;
-//			int16_t destX = iX + x;
-//			int16_t destY = iY + y;
-//			
-//			if((srcFile->data[sourcePixel] != 0xFF) &&
-//				(destX >= 0) &&
-//				(destX < PIXEL_WIDTH) &&
-//				(destY >= 0) &&
-//				(destY < 144))
-//			{
-//				dst[(destY * PIXEL_WIDTH) + destX] =
-//					((srcFile->data[sourcePixel]) >> 2)
-//					+ ASCII_BLACK_LEVEL;
-//			}
-//		}
-//	}
-//	return true;
-//}
 
 //For this one we'll say 0-0xFF corrisponds to black_level-0xFF
 bool CRTVideo::drawTile(uint8_t * dst, int16_t tileNumber, bitmap_file_t * srcFile, int16_t x, int16_t y)

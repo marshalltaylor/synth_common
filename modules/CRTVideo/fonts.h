@@ -1,13 +1,16 @@
 #ifndef FONTS_H
 #define FONTS_H
 
+#include "font8x11.h"
 #include "font5x7.h"
 #include "font5x6.h"
 
 #define ASCII_BLACK_LEVEL 98
 
+#define NUM_FONTS 3
+
 extern uint8_t asciiLUT[];
-extern const unsigned char font5x6[];
+//extern const unsigned char font5x6[];
 
 void calculateAsciiLUT(void);
 

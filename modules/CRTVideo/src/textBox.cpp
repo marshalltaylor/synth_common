@@ -44,6 +44,10 @@ void TextBuffer::write(char c)
     if(advNext >= length) advNext -= length;
     if(advNext == start)
     {
+		if(circularMode)
+		{
+			return;
+		}
         //overwriting old data
         start++;
         if(start >= length) start -= length;
@@ -80,40 +84,12 @@ uint16_t TextBuffer::bytesUsed(void)
     return indexDelta;
 }
 
-//uint16_t TextBuffer::indexLastNLines(uint16_t lines, uint16_t width)
-//{
-//    if(!data || (nextToWrite == start))
-//    {
-//        return 0;
-//    }
-//    int32_t index = bytesUsed() - 1;
-//    int32_t lineCtr = 0;
-//    int32_t charCtr = 0;
-//    //count '\n'
-//    for(int i = index; i >= 0; i--)
-//    {
-//        if(getChar(i) == '\n')
-//        {
-//            lineCtr += charCtr / width;
-//            charCtr = 0;
-//            lineCtr++;
-//        }
-//        else
-//        {
-//            charCtr++;
-//            if(charCtr == width)
-//            {
-//                charCtr = 0;
-//                lineCtr++;
-//            }
-//        }
-//        if(lineCtr == lines)
-//        {
-//            return i;
-//        }
-//    }
-//    return 0;
-//}
+uint16_t TextBuffer::bytesFree(void)
+{
+	int16_t retVal = length - bytesUsed() - 1;
+	if(retVal < 0) retVal = 0;
+    return retVal;
+}
 
 char TextBuffer::getChar(uint16_t i)
 {
@@ -124,6 +100,11 @@ char TextBuffer::getChar(uint16_t i)
         i -= length;
     }
     return data[i];
+}
+
+void TextBuffer::setCircularMode(bool cEnb)
+{
+	circularMode = cEnb;
 }
 
 TextBox::TextBox(void)

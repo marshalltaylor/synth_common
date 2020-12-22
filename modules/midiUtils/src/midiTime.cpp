@@ -49,8 +49,7 @@ void MidiClock::service(void)
 			timeElapsed -= timeTickLength;
 			incrementTick();
 		}
-	}		
-
+	}
 }
 
 void MidiClock::setBPM(int newBPM)

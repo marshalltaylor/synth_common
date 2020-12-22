@@ -11,11 +11,14 @@ public:
     void write(char c);
     void write(const char * str);
     uint16_t bytesUsed(void);
+	uint16_t bytesFree(void);
     char getChar(uint16_t i);
+	void setCircularMode(bool cEnb);
 private:
     uint16_t start = 0;
     uint16_t nextToWrite = 0;
     uint16_t length;
+	bool circularMode = false;
     char * data;
 };
 
