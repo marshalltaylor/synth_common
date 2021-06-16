@@ -43,9 +43,22 @@ int HardwareSerial::peek(void)
 	return bspSerialMidiObj.peek();
 }
 
+void HardwareSerial::setRxByteCallback(void (*inputCallback)(char))
+{
+	if(inputCallback)
+	{
+		rxByteCallback = inputCallback;
+	}
+}
+
 int HardwareSerial::read(void)
 {
-	return bspSerialMidiObj.read();
+	char c = bspSerialMidiObj.read();
+	if(rxByteCallback)
+	{
+		rxByteCallback(c);
+	}
+	return c;
 }
 
 size_t HardwareSerial::write(uint8_t c)
