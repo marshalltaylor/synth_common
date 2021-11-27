@@ -4,15 +4,14 @@
 # Inputs:
 # REPO_ROOT
 # SYNTH_COMMON_ROOT
-# board
 
 PATH_OPENOCD:=$(SYNTH_COMMON_ROOT)/tools/debugger
 #PATH_OPENOCD=$(SYNTH_COMMON_ROOT)/tools/debugger
 
 
-$(REPO_ROOT)/bsp/build/bsp_$(board).a:
-	@echo "######## Building $(REPO_ROOT)/bsp_$(board)"
-	$(MAKE) -C $(REPO_ROOT)/bsp board=$(board)
+$(REPO_ROOT)/bsp/build/bsp.a:
+	@echo "######## Building $(REPO_ROOT)/bsp"
+	$(MAKE) -C $(REPO_ROOT)/bsp
 
 $(SYNTH_COMMON_ROOT)/FreeRTOS/build/FreeRTOS.a:
 	@echo "######## Building $(SYNTH_COMMON_ROOT)/FreeRTOS"
