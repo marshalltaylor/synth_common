@@ -2,6 +2,13 @@
 SYNTH_COMMON_ROOT := ../..
 REPO_ROOT = ../$(SYNTH_COMMON_ROOT)
 
+$(info )
+$(info Error:)
+$(info The SegmentVideo module is not generic and has been moved to the using app.)
+$(info Whatever you're building needs to take a copy of the source and use it directly.)
+$(info )
+$(error TODO: Make a more basic segment driver module)
+
 C_SOURCES = \
 src/SegmentVideo.cpp \
 src/MidiClockDisplay.cpp

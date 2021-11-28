@@ -25,6 +25,7 @@ $(SYNTH_COMMON_ROOT)/modules/midi47fx/build/midi47fx.a:
 	@echo "######## Building $(SYNTH_COMMON_ROOT)/modules/midi47fx"
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/midi47fx
 
+# SegmentVideo is deprecated
 $(SYNTH_COMMON_ROOT)/modules/SegmentVideo/build/SegmentVideo.a:
 	@echo "######## Building $(SYNTH_COMMON_ROOT)/modules/SegmentVideo"
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/SegmentVideo
