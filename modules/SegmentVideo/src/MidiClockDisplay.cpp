@@ -94,6 +94,11 @@ void MidiClockDisplay::displayDrawValue( const char * input )
 			textBitmap[i + 2] = segmentMap[*(input + i) - 0x30];
 		}
 	}
+	if(displayState == idle)
+	{
+		//Start a fade in
+		newValueRequested = true;
+	}
 }
 
 void MidiClockDisplay::setPlayIndicator( void )
@@ -150,7 +155,7 @@ void MidiClockDisplay::showNewValue( const char * input )
 
 void MidiClockDisplay::tickValueStateMachine( uint32_t sysTime )
 {
-	//localPrintf("%d ->\n", displayState);
+    displayStates_t inState = displayState;
 	
 	if( restartTimer )
 	{
@@ -232,7 +237,11 @@ void MidiClockDisplay::tickValueStateMachine( uint32_t sysTime )
 		displayState = init;
 		break;
 	}
-	//localPrintf("     -> %d\n", displayState);
+    if(inState != displayState)
+    {
+        localPrintf("STATE: % 2d -> % 2d\n", inState, displayState);
+    }
+
 }
 
 uint8_t MidiClockDisplay::getValueState( void ){
