@@ -124,9 +124,14 @@ bool SegmentFrameBuffer::empty( void )
 	return false;
 }
 
-// Mixer
+//uint8_t * SegmentVideo::getOutputBuffer(void)
+//{
+//	return outputFrame;
+//}
 
-void SegmentVideo::writeNextFrame(void)
+//Mixer
+// This only writes to the internal buffer, an external function uses it.
+void SegmentVideo::prepareNextFrame(void)
 {
 	BufferChannels nextValueMaskFrame;
 	BufferChannels nextFGFrame;
@@ -163,6 +168,6 @@ void SegmentVideo::writeNextFrame(void)
 		//outputFrame[i] = nextFGFrame.onBufferPtr[i];
 		outputFrame[i] &= ~nextNoiseFrame.offBufferPtr[i];
 		outputFrame[i] |= nextNoiseFrame.onBufferPtr[i];
-	}	
-	bspSPISegmentWrite(outputFrame);
+        outputFrame[i] ^= 0xFF;
+	}
 }

@@ -16,9 +16,9 @@ class SegmentFrameBuffer
 public:
 	SegmentFrameBuffer(void);
 	void write(const uint8_t * onData, const uint8_t * offData);
-	bool ready( void );
-	bool empty( void );
-	bool read( BufferChannels * retVar );
+	bool ready(void);
+	bool empty(void);
+	bool read(BufferChannels * retVar);
 	
 private:
 	uint8_t onBuffer[FB_FIFO_SIZE][11];
@@ -32,14 +32,15 @@ class SegmentVideo
 {
 public:
 	SegmentVideo(void){};
-	void writeNextFrame( void );
+//	uint8_t * getOutputBuffer(void);
+	void prepareNextFrame(void);
 	
 	uint8_t textBitmap[11] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 	SegmentFrameBuffer valueMask_layer;
 	SegmentFrameBuffer fg_layer;
 	SegmentFrameBuffer noise_layer;
+	uint8_t outputFrame[11]; // Used directly by SPI hardware
 private:
-	uint8_t outputFrame[11];
 };
 
 #endif
