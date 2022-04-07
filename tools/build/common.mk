@@ -120,6 +120,6 @@ build_dirs: $(BUILD_PATHS)
 $(BUILD_PATHS):
 	mkdir -p $@
 
-# Clean
+# Clean ( '-' prefix ignores errors )
 clean::
-	rm -rf $(BUILD_DIR)
+	-rm -rf $(BUILD_DIR)
