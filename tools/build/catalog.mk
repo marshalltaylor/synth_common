@@ -12,6 +12,10 @@ $(REPO_ROOT)/bsp/build/bsp.a:
 	@echo "######## Building $(REPO_ROOT)/bsp"
 	$(MAKE) -C $(REPO_ROOT)/bsp
 
+$(REPO_ROOT)/dsp/build/dsp.a:
+	@echo "######## Building $(REPO_ROOT)/dsp"
+	$(MAKE) -C $(REPO_ROOT)/dsp
+
 $(SYNTH_COMMON_ROOT)/FreeRTOS/build/FreeRTOS.a:
 	@echo "######## Building $(SYNTH_COMMON_ROOT)/FreeRTOS"
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/FreeRTOS
@@ -42,6 +46,7 @@ $(SYNTH_COMMON_ROOT)/modules/TeensyView/build/TeensyView.a:
 
 clean_all:
 	$(MAKE) -C $(REPO_ROOT)/bsp clean
+	$(MAKE) -C $(REPO_ROOT)/dsp clean
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/FreeRTOS clean
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/logging clean
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/midi47fx clean
@@ -53,6 +58,7 @@ clean_all:
 clean_apps:
 	rm -rf $(REPO_ROOT)/apps/sliders_001/build
 	rm -rf $(REPO_ROOT)/bsp/test/build
+	rm -rf $(REPO_ROOT)/dsp/test/build
 	rm -rf $(SYNTH_COMMON_ROOT)/modules/_template/test/build
 	rm -rf $(SYNTH_COMMON_ROOT)/modules/logging/test/build
 	rm -rf $(SYNTH_COMMON_ROOT)/modules/midi47fx/test/build
