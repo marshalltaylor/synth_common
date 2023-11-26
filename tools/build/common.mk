@@ -52,7 +52,7 @@ GDB = $(GCC_PATH)/arm-none-eabi-gdb
 # -v
 
 # WAS FOR 4: CFLAGS += -DUSE_FULL_LL_DRIVER -DARM_MATH_CM4 -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -DSTM32F4xx -DSTM32F446xx -gdwarf-4 -g3 -Wall -Werror -c -O0
-CFLAGS += -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_FULL_LL_DRIVER -DUSE_HAL_DRIVER -DSTM32H743xx -c -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb
+CFLAGS += -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_FULL_LL_DRIVER -DUSE_HAL_DRIVER -DSTM32H743xx -c -O3 -ffunction-sections -fdata-sections -Wall -fstack-usage --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb
 
 # Generate dependency information
 CFLAGS += -MMD -MP -MF "$(@:$(BUILD_DIR)/obj/%.o=$(BUILD_DIR)/dep/%.d)"
@@ -68,7 +68,7 @@ CPPFLAGS = $(CFLAGS) -std=c++11 -fno-rtti
 ASFLAGS = -mcpu=cortex-m7 -g3 -DDEBUG -c -x assembler-with-cpp --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb 
 
 # linker -lstdc++ -lsupc++  -Wl,--gc-sections  -fno-lto
-LDFLAGS = -mcpu=cortex-m7 --specs=nosys.specs -static --specs=nano.specs -Wl,--gc-sections -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -lc -lm -T$(LINKER_FILE) -Wl,-Map=$(BUILD_DIR)/output.map -Wl,--gc-sections
+LDFLAGS = -u _printf_float -mcpu=cortex-m7 --specs=nosys.specs -static --specs=nano.specs -lstdc++ -lsupc++ -Wl,--gc-sections -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -lc -lm -T$(LINKER_FILE) -Wl,-Map=$(BUILD_DIR)/output.map -Wl,--gc-sections
 #LDFLAGS = -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard -specs=nano.specs -T$(LINKER_FILE) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
 # binaries
