@@ -12,9 +12,15 @@ $(REPO_ROOT)/bsp/build/bsp.a:
 	@echo "######## Building $(REPO_ROOT)/bsp"
 	$(MAKE) -C $(REPO_ROOT)/bsp
 
-$(REPO_ROOT)/dsp/build/dsp.a:
+$(REPO_ROOT)/dsp/build/lib/protosynth_dsp_arm_h7_BSPDEBUG.a:
 	@echo "######## Building $(REPO_ROOT)/dsp"
-	$(MAKE) -C $(REPO_ROOT)/dsp
+	$(MAKE) clean -C $(REPO_ROOT)/dsp
+	$(MAKE) ARCH=arm_h7 ON_TARGET_DEBUG=true -C $(REPO_ROOT)/dsp
+
+$(REPO_ROOT)/dsp/build/lib/protosynth_dsp_arm_h7.a:
+	@echo "######## Building $(REPO_ROOT)/dsp"
+	$(MAKE) clean -C $(REPO_ROOT)/dsp
+	$(MAKE) ARCH=arm_h7 -C $(REPO_ROOT)/dsp
 
 $(SYNTH_COMMON_ROOT)/FreeRTOS/build/FreeRTOS.a:
 	@echo "######## Building $(SYNTH_COMMON_ROOT)/FreeRTOS"

@@ -51,18 +51,22 @@ GDB = $(GCC_PATH)/arm-none-eabi-gdb
 #  -DUSE_HAL_DRIVER -DSTM32F7xx  '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -fmessage-length=0 -Og -ffunction-sections
 # -v
 
-# WAS FOR 4: CFLAGS += -DUSE_FULL_LL_DRIVER -DARM_MATH_CM4 -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -DSTM32F4xx -DSTM32F446xx -gdwarf-4 -g3 -Wall -Werror -c -O0
-CFLAGS += -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_FULL_LL_DRIVER -DUSE_HAL_DRIVER -DSTM32H743xx -c -O3 -ffunction-sections -fdata-sections -Wall -fstack-usage --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb
+# OLD EXAMPLE: CFLAGS += -DUSE_FULL_LL_DRIVER -DARM_MATH_CM4 -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -DSTM32F4xx -DSTM32F446xx -gdwarf-4 -g3 -Wall -Werror -c -O0
+
+COMMON_FLAGS = -mcpu=cortex-m7 -g3 -DDEBUG -DUSE_FULL_LL_DRIVER -DUSE_HAL_DRIVER -DSTM32H743xx -O3 -ffunction-sections -fdata-sections -Wall -fstack-usage --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb
 
 # Generate dependency information
-CFLAGS += -MMD -MP -MF "$(@:$(BUILD_DIR)/obj/%.o=$(BUILD_DIR)/dep/%.d)"
+COMMON_FLAGS += -MMD -MP -MF "$(@:$(BUILD_DIR)/obj/%.o=$(BUILD_DIR)/dep/%.d)"
 
 # Message behavior
 # -fsyntax-only -fmax-errors=1 -w -Werror 
-CFLAGS += -fmax-errors=1
+COMMON_FLAGS += -fmax-errors=1
+
+# c
+CFLAGS += $(COMMON_FLAGS) -std=gnu11
 
 # cpp
-CPPFLAGS = $(CFLAGS) -std=c++11 -fno-rtti
+CPPFLAGS = $(COMMON_FLAGS) -std=c++11 -fno-rtti
 
 # assembler
 ASFLAGS = -mcpu=cortex-m7 -g3 -DDEBUG -c -x assembler-with-cpp --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb 
@@ -95,18 +99,18 @@ include $(DEPFILES)
 # Objects
 $(BUILD_DIR)/obj/%.o: %.cpp
 	@echo "#### Compiling: $<"
-	$(PP) $(CPPFLAGS) $(addprefix -I,$(C_INCLUDES)) $< -o $@
+	$(PP) $(CPPFLAGS) $(addprefix -I,$(C_INCLUDES)) -c $< -o $@
 	@echo
 
 $(BUILD_DIR)/obj/%.o: %.c
 	@echo "#### Compiling: $<"
-	$(CC) $(CFLAGS) $(addprefix -I,$(C_INCLUDES)) $< -o $@
+	$(CC) $(CFLAGS) $(addprefix -I,$(C_INCLUDES)) -c $< -o $@
 	@echo
 
 $(BUILD_DIR)/obj/%.o: %.s
 	@echo "#### Compiling: $<"
 	@echo "$(shell cygpath -w -a $<)"
-	$(CC) -c $(ASFLAGS) $(addprefix -I,$(C_INCLUDES)) $< -o $@
+	$(CC) -c $(ASFLAGS) $(addprefix -I,$(C_INCLUDES)) -c $< -o $@
 	@echo
 
 # Archiver
