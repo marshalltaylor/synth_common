@@ -6,7 +6,6 @@
 # SYNTH_COMMON_ROOT
 
 PATH_OPENOCD:=$(SYNTH_COMMON_ROOT)/tools/debugger
-#PATH_OPENOCD=$(SYNTH_COMMON_ROOT)/tools/debugger
 
 
 $(REPO_ROOT)/bsp/build/bsp.a:
@@ -24,11 +23,6 @@ $(SYNTH_COMMON_ROOT)/modules/logging/build/logging.a:
 $(SYNTH_COMMON_ROOT)/modules/midi47fx/build/midi47fx.a:
 	@echo "######## Building $(SYNTH_COMMON_ROOT)/modules/midi47fx"
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/midi47fx
-
-# SegmentVideo is deprecated
-$(SYNTH_COMMON_ROOT)/modules/SegmentVideo/build/SegmentVideo.a:
-	@echo "######## Building $(SYNTH_COMMON_ROOT)/modules/SegmentVideo"
-	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/SegmentVideo
 
 $(SYNTH_COMMON_ROOT)/modules/CRTVideo/build/CRTVideo.a:
 	@echo "######## Building $(SYNTH_COMMON_ROOT)/modules/CRTVideo"
@@ -52,7 +46,6 @@ clean_all:
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/logging clean
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/midi47fx clean
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/midiUtils clean
-	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/SegmentVideo clean
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/CRTVideo clean
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/TeensyView clean
 	$(MAKE) -C $(SYNTH_COMMON_ROOT)/modules/uCModules clean
@@ -64,7 +57,6 @@ clean_apps:
 	rm -rf $(SYNTH_COMMON_ROOT)/modules/logging/test/build
 	rm -rf $(SYNTH_COMMON_ROOT)/modules/midi47fx/test/build
 	rm -rf $(SYNTH_COMMON_ROOT)/modules/midiUtils/test/build
-	rm -rf $(SYNTH_COMMON_ROOT)/modules/SegmentVideo/test/build
 	rm -rf $(SYNTH_COMMON_ROOT)/modules/CRTVideo/test/build
 	rm -rf $(SYNTH_COMMON_ROOT)/modules/TeensyView/test/build
 	rm -rf $(SYNTH_COMMON_ROOT)/modules/uCModules/test/build

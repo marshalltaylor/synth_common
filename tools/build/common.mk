@@ -18,6 +18,7 @@ common_no_target:
 # Build directories
 BUILD_DIR = build
 TARGET_EXEC := $(BUILD_DIR)/output.elf
+TARGET_BIN := $(BUILD_DIR)/output.bin
 
 # TODO: Best place for linker file?
 LINKER_FILE = $(REPO_ROOT)/bsp/STM32F446RETx_FLASH.ld
@@ -122,4 +123,8 @@ $(BUILD_PATHS):
 
 # Clean ( '-' prefix ignores errors )
 clean::
-	-rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR)
+
+deploy: all
+	@echo "Deploying $(TARGET_BIN) to $(drive):"
+	cmd /c "copy build\output.bin $(drive):"
