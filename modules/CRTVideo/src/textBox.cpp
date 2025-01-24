@@ -107,6 +107,29 @@ void TextBuffer::setCircularMode(bool cEnb)
 	circularMode = cEnb;
 }
 
+
+//const version
+TextBufferConst::TextBufferConst(char * d, uint16_t sz) : TextBuffer(d, sz)
+{
+    data = d;
+    length = sz;
+    nextToWrite = sz;
+}
+
+void TextBufferConst::clear(void)
+{
+}
+
+void TextBufferConst::write(char c)
+{
+}
+
+void TextBufferConst::write(const char * str)
+{
+}
+
+
+//Text box
 TextBox::TextBox(void)
 {
     data = NULL;

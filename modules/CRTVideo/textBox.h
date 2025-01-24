@@ -14,12 +14,21 @@ public:
 	uint16_t bytesFree(void);
     char getChar(uint16_t i);
 	void setCircularMode(bool cEnb);
-private:
+protected:
     uint16_t start = 0;
     uint16_t nextToWrite = 0;
     uint16_t length;
 	bool circularMode = false;
     char * data;
+};
+
+class TextBufferConst: public TextBuffer
+{
+public:
+    TextBufferConst(char * d, uint16_t sz);
+    void clear(void);
+    void write(char c);
+    void write(const char * str);
 };
 
 class TextBox
