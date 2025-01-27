@@ -21,7 +21,7 @@ TARGET_EXEC := $(BUILD_DIR)/output.elf
 TARGET_BIN := $(BUILD_DIR)/output.bin
 
 # TODO: Best place for linker file?
-LINKER_FILE = $(REPO_ROOT)/bsp/STM32F446RETx_FLASH.ld
+LINKER_FILE = $(REPO_ROOT)/bsp/UserProject/STM32F446RETx_FLASH.ld
 
 BUILD_PATHS = \
 $(BUILD_DIR) \
