@@ -23,7 +23,8 @@ void HardwareSerial::initPort(comPort_t port)
 	if(( bspSerialMidiObj.bytesAvailable == NULL )
 				|| ( bspSerialMidiObj.peek == NULL )
 				|| ( bspSerialMidiObj.read == NULL )
-				|| ( bspSerialMidiObj.write == NULL ))
+				|| ( bspSerialMidiObj.write == NULL )
+				|| ( bspSerialMidiObj.txInProgress == NULL ))
 	{
 		while(1);
 	}
@@ -65,4 +66,9 @@ size_t HardwareSerial::write(uint8_t c)
 {
 	bspSerialMidiObj.write(c);
 	return 1;
+}
+
+bool HardwareSerial::txInProgress(void)
+{
+	return bspSerialMidiObj.txInProgress();
 }
