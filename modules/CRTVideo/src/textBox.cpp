@@ -44,10 +44,10 @@ void TextBuffer::write(char c)
     if(advNext >= length) advNext -= length;
     if(advNext == start)
     {
-		if(circularMode)
-		{
-			return;
-		}
+        if(!circularMode)
+        {
+            return;
+        }
         //overwriting old data
         start++;
         if(start >= length) start -= length;
