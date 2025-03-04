@@ -132,6 +132,6 @@ $(BUILD_PATHS):
 clean::
 	rm -rf $(BUILD_DIR)
 
-deploy: all
+deploy:
 	@echo "Deploying $(TARGET_BIN) to $(drive):"
 	cmd /c "copy build\output.bin $(drive):"
